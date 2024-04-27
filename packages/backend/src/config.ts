@@ -19,11 +19,10 @@ export const IS_PROD = process.env.NODE_ENV === 'production';
 export const IS_TEST = process.env.NODE_ENV === 'development';
 
 // DB STUFF
-const { MONGO_HOST, MONGO_USERNAME, MONGO_PASSWORD, MONGO_DB } = process.env;
+const { MONGO_HOST, MONGO_USERNAME, MONGO_PASSWORD } = process.env;
 
 if (!MONGO_HOST) throw new Error('Missing MONGO_HOST environment variable');
 if (!MONGO_USERNAME) throw new Error('Missing MONGO_USERNAME environment variable');
 if (!MONGO_PASSWORD) throw new Error('Missing MONGO_PASSWORD environment variable');
-if (!MONGO_DB) throw new Error('Missing MONGO_DB environment variable');
 
-export { MONGO_DB, MONGO_HOST, MONGO_PASSWORD, MONGO_USERNAME };
+export { MONGO_HOST, MONGO_PASSWORD, MONGO_USERNAME };
