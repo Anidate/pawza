@@ -1,7 +1,9 @@
-import React from 'react';
-
+import ChatContainer from "./ChatContainer";
+import "./index.css"
 function ChatApp() {
-  return <div>Welcome to the Chat Page!</div>;
+  return <div className='ChatApp'>
+    <ChatContainer />
+    </div>;
 }
 
 export default ChatApp;
