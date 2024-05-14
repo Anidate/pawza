@@ -10,11 +10,10 @@ export const createNewUser = async (params: {
   gender: Gender;
   purpose: UserPurpose;
   location: [number, number];
-  photos: string[];
 }): Promise<UserDoc> => {
-  const { email, firstName, lastName, password, birthDate, gender, purpose, location, photos } = params;
+  const { email, firstName, lastName, password, birthDate, gender, purpose, location } = params;
 
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = await hashPassword(password);
 
   const user = new UserModel({
     email,
@@ -25,8 +24,9 @@ export const createNewUser = async (params: {
     gender,
     purpose,
     location,
-    photos,
+    photos: [],
   });
+
   return await user.save();
 };
 

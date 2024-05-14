@@ -8,12 +8,7 @@ export const validateRequest =
     const errors = validationResult(req as any);
 
     if (!errors.isEmpty()) {
-      throw new AppBadRequestError(
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(', '),
-      );
+      throw new AppBadRequestError(errors.array()[0].msg);
     }
 
     next();

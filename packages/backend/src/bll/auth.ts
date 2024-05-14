@@ -32,6 +32,7 @@ export const generateJwtForUser = (user: UserDoc) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '5 minutes' });
 
   // TODO: JASON - Refresh token
+  return token;
 };
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
