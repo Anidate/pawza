@@ -1,11 +1,30 @@
+import ChatArea from "./ChatArea";
 import SideBar from "./SideBar";
-import WorkPlace from "./WorkPlace";
 import "./styles.css"
+
 function ChatContainer() {
+  const chats = [
+    {
+      name: "Test#1",
+      lastMessage: "last Message #1",
+      timeStamp: "today",
+    },
+    {
+      name: "Test#2",
+      lastMessage: "last Message #2",
+      timeStamp: "today",
+    },
+    {
+      name: "Test#3",
+      lastMessage: "last Message #3",
+      timeStamp: "today",
+    },
+  ];
+
   return (
-    <div className="chat-container">
+    <div className="main-container">
       <SideBar />
-      <WorkPlace />
+      <ChatArea chat={chats[0]} />
     </div>
   );
 }
