@@ -26,7 +26,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: backend
-          file: backend/Dockerfile
+          context: packages/backend              # folder containing the Dockerfile
+          file: packages/backend/Dockerfile       
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pawza:backend_latest
