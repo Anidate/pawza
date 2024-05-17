@@ -1,75 +1,45 @@
 import { Box, Typography } from '@mui/material';
-import GuyWithDog from '@src/assets/guy_with_dog.webp';
-import WomanWithDog from '@src/assets/woman_with_dog.jpg';
 import { useState } from 'react';
 
 import ImageCard from './ImageCard';
 import PawButton from './PawButton';
+import './style.css';
+import userData from './UserData';
 
 function Home() {
-  const [guy, setGuy] = useState(true);
+  const [currentUserIndex, setCurrentUserIndex] = useState(0);
 
-  // Dummy data for two users
-  const userData = [
-    {
-      name: "John",
-      age: 35,
-      description: "Dog lover and outdoor enthusiast.",
-      image: GuyWithDog,
-    },
-    {
-      name: "Emily",
-      age: 28,
-      description: "Animal rescuer with a passion for hiking.",
-      image: WomanWithDog,
-    }
-  ];
+  const handleNextUser = () => {
+    setCurrentUserIndex((prevIndex) => (prevIndex + 1) % userData.length);
+  };
+
+  const handlePreviousUser = () => {
+    setCurrentUserIndex((prevIndex) => (prevIndex - 1 + userData.length) % userData.length);
+  };
+
+  const currentUser = userData[currentUserIndex];
 
   return (
-    <Box
-      p={4}
-      sx={{
-        height: '100%',
-        boxSizing: 'border-box',
-        gap: '3rem',
-      }}
-      display="flex"
-      flexDirection="column"
-      justifyContent="end"
-    >
-      {/* Display user information of the current user */}
-      {guy && (
-        <>
-          <Typography variant="h4" align="center" gutterBottom>
-            {userData[0].name}, {userData[0].age}
-          </Typography>
-          <Typography variant="body1" align="center" gutterBottom>
-            {userData[0].description}
-          </Typography>
+    <Box className="home-container">
+      <Box className="image-card-container">
+        <ImageCard
+          src={currentUser.image}
+          style={{ borderRadius: '16px' }}
+        />
 
-          {/* ImageCard for the current user */}
-          <ImageCard src={userData[0].image} />
-        </>
-      )}
-
-      {/* Display user information of the other user */}
-      {!guy && (
-        <>
-          <Typography variant="h4" align="center" gutterBottom>
-            {userData[1].name}, {userData[1].age}
+        <Box className="image-card-description" sx={{ borderRadius: '0 0 16px 16px' }}>
+          <Typography variant="h6">
+            {currentUser.name}, {currentUser.age}
           </Typography>
-          <Typography variant="body1" align="center" gutterBottom>
-            {userData[1].description}
+          <Typography variant="body2">
+            {currentUser.description}
           </Typography>
+        </Box>
+      </Box>
 
-          {/* ImageCard for the other user */}
-          <ImageCard src={userData[1].image} />
-        </>
-      )}
-
-      <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
-        <PawButton color="red" onClick={() => setGuy((p) => !p)} />
-        <PawButton color="green" onClick={() => setGuy((p) => !p)} />
+      <Box className="buttons-container">
+        <PawButton color="red" onClick={handlePreviousUser} />
+        <PawButton color="green" onClick={handleNextUser} />
       </Box>
     </Box>
   );
