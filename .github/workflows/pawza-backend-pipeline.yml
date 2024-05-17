@@ -1,6 +1,7 @@
 name: backend ci/cd pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'backend_dockerfile_v1'
