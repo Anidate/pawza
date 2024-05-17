@@ -30,6 +30,7 @@ export default function Login() {
   const {
     mutateAsync: login,
     isPending,
+    isSuccess,
     isError,
   } = useMutation({
     mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
@@ -38,21 +39,20 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const res = await login({ email, password });
-    // TODO: Error handling
-    if (res.status === 200) {
-      const { user: newUser, token, refreshToken } = res.data;
+    try {
+      const res = await login({ email, password });
+      if (res.status === 200) {
+        const { user: newUser, token, refreshToken } = res.data;
 
-      setAuth({ user: newUser, token, refreshToken });
+        setAuth({ user: newUser, token, refreshToken });
+      }
+    } catch (e) {
+      // Empty catch, it's ok for now
     }
   };
 
   if (user) {
-    <Navigate to="/home" />;
-  }
-
-  if (isPending) {
-    //
+    return <Navigate to="/home" />;
   }
 
   // Bad, don't do this :)
@@ -96,9 +96,12 @@ export default function Login() {
     </Box>
   );
 
+  const showLoader = isPending || (isSuccess && !user);
+
+  // TODO: If error, handle it (show message or something)
   return (
     <Container maxWidth="xs" sx={{ py: '12lvh' }}>
-      {isPending ? <CircularProgress sx={{ py: '12lvh' }} /> : <LoginForm />}
+      {showLoader ? <CircularProgress sx={{ py: '12lvh' }} /> : <LoginForm />}
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
