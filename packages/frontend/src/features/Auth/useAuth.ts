@@ -8,7 +8,7 @@ interface AuthContextData {
   token?: string;
   refreshToken?: string;
   user?: UserAuthData;
-  setAuth: (user: UserAuthData, token: string) => void;
+  setAuth: (params: { user: UserAuthData; token: string; refreshToken: string }) => void;
   resetAuth: () => void;
 }
 

@@ -1,16 +1,17 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { CircularProgress } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useMutation } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { Link, Navigate } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
 
-import { signIn } from '../../api/sign-in';
+import { login as loginApiCall } from '../../api/login';
+import { useAuth } from '../Auth/useAuth';
 
 function Copyright(props: any) {
   return (
@@ -20,70 +21,84 @@ function Copyright(props: any) {
   );
 }
 
-export default function SignIn() {
+export default function Login() {
+  const { setAuth, user } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const signInMutation = useMutation({
-    mutationFn: (data: { email: string; password: string }) => signIn(data),
+  const {
+    mutateAsync: login,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
   });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    signInMutation.mutate({
-      email,
-      password,
-    });
+    const res = await login({ email, password });
+    // TODO: Error handling
+    if (res.status === 200) {
+      const { user: newUser, token, refreshToken } = res.data;
+
+      setAuth({ user: newUser, token, refreshToken });
+    }
   };
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            sx={{ mt: 0 }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
-            Sign In
-          </Button>
+  if (user) {
+    <Navigate to="/home" />;
+  }
 
-          {/* TODO: Change link to /signup */}
-          <Link to="/home">{"Don't have an account? Sign Up"}</Link>
-        </Box>
+  if (isPending) {
+    //
+  }
+
+  // Bad, don't do this :)
+  const LoginForm = () => (
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <LockOutlinedIcon />
+      </Avatar>
+      <Typography component="h1" variant="h5">
+        Sign in
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          sx={{ mt: 0 }}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
+          Sign In
+        </Button>
+
+        {/* TODO: Change link to /signup */}
+        <Link to="/home">{"Don't have an account? Sign Up"}</Link>
       </Box>
+    </Box>
+  );
+
+  return (
+    <Container maxWidth="xs" sx={{ py: '12lvh' }}>
+      {isPending ? <CircularProgress sx={{ py: '12lvh' }} /> : <LoginForm />}
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
