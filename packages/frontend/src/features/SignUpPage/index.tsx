@@ -47,8 +47,7 @@ export default function SignUpPage() {
     try {
       const res = await signUp({ email, password });
       if (res.status === 201) {
-        console.log(res);
-        navigate("/login");
+        navigate({ to: "/login" });
       }
     } catch (e) {
       // Handle the error (show message or something)
