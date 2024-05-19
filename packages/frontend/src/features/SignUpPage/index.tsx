@@ -1,33 +1,28 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { CircularProgress } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { type FormEvent, useState } from "react";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { CircularProgress } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { type FormEvent, useState } from 'react';
 
-import { signUp as signUpApiCall } from "../../api/sign-up";
+import { signUp as signUpApiCall } from '../../api/sign-up';
 
 function Copyright(props: any) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
       Copyright © Pawza {new Date().getFullYear()}.
     </Typography>
   );
 }
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -37,8 +32,7 @@ export default function SignUpPage() {
     isSuccess,
     isError,
   } = useMutation({
-    mutationFn: (data: { email: string; password: string }) =>
-      signUpApiCall(data),
+    mutationFn: (data: { email: string; password: string }) => signUpApiCall(data),
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -47,17 +41,16 @@ export default function SignUpPage() {
     try {
       const res = await signUp({ email, password });
       if (res.status === 201) {
-        navigate({ to: "/login" });
+        navigate({ to: '/login' });
       }
     } catch (e) {
       // Handle the error (show message or something)
-      console.error(e);
     }
   };
 
   const SignUpForm = () => (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
@@ -85,23 +78,18 @@ export default function SignUpPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2, bgcolor: "secondary.main" }}
-        >
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
           Sign Up
         </Button>
 
-        <Link to="/login">{"Already have an account? Login"}</Link>
+        <Link to="/login">{'Already have an account? Login'}</Link>
       </Box>
     </Box>
   );
 
   return (
-    <Container maxWidth="xs" sx={{ py: "12lvh" }}>
-      {isPending ? <CircularProgress sx={{ py: "12lvh" }} /> : <SignUpForm />}
+    <Container maxWidth="xs" sx={{ py: '12lvh' }}>
+      {isPending ? <CircularProgress sx={{ py: '12lvh' }} /> : <SignUpForm />}
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
