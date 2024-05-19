@@ -1,22 +1,27 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { CircularProgress } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { useMutation } from '@tanstack/react-query';
-import { Link, Navigate } from '@tanstack/react-router';
-import { type FormEvent, useState } from 'react';
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { CircularProgress } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useMutation } from "@tanstack/react-query";
+import { Link, Navigate } from "@tanstack/react-router";
+import { type FormEvent, useState } from "react";
 
-import { setApiClientTokens } from '../../api/base';
-import { login as loginApiCall } from '../../api/login';
-import { useAuth } from '../Auth/useAuth';
+import { setApiClientTokens } from "../../api/base";
+import { login as loginApiCall } from "../../api/login";
+import { useAuth } from "../Auth/useAuth";
 
 function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       Copyright © Pawza {new Date().getFullYear()}.
     </Typography>
   );
@@ -25,20 +30,18 @@ function Copyright(props: any) {
 export default function Login() {
   const { setUser, user } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const {
     mutateAsync: login,
     isPending,
     isSuccess,
     isError,
-
-  } =
-  useMutation({
+  } = useMutation({
     // mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
 
-    mutationFn (data: { email: string; password: string }) {
+    mutationFn(data: { email: string; password: string }) {
       return loginApiCall(data);
     },
   });
@@ -47,21 +50,11 @@ export default function Login() {
   useMutation(
     // Open an object definition
     {
-    
-    
-    // The key mutationFn has the value:
-    mutationFn:
-    
-    (data: { email: string; password: string }) => loginApiCall(data),
-
-
-
-
-    mutationFn:
-      (data: { email: string; password: string })
-        =>
-      loginApiCall(data),
-  });
+      // The key mutationFn has the value:
+      mutationFn: (data: { email: string; password: string }) =>
+        loginApiCall(data),
+    }
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -86,7 +79,7 @@ export default function Login() {
   // Bad, don't do this :)
   const LoginForm = () => (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
@@ -114,7 +107,12 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2, bgcolor: "secondary.main" }}
+        >
           Sign In
         </Button>
 
@@ -128,8 +126,8 @@ export default function Login() {
 
   // TODO: If error, handle it (show message or something)
   return (
-    <Container maxWidth="xs" sx={{ py: '12lvh' }}>
-      {showLoader ? <CircularProgress sx={{ py: '12lvh' }} /> : <LoginForm />}
+    <Container maxWidth="xs" sx={{ py: "12lvh" }}>
+      {showLoader ? <CircularProgress sx={{ py: "12lvh" }} /> : <LoginForm />}
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
