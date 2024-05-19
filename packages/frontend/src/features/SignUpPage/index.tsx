@@ -10,9 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Link, Navigate } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 
-import { setApiClientTokens } from "../../api/base";
-import { login as loginApiCall } from "../../api/login";
-import { useAuth } from "../Auth/useAuth";
+import { signUp as signUpApiCall } from "../../api/sign-up";
 
 function Copyright(props: any) {
   return (
@@ -27,59 +25,49 @@ function Copyright(props: any) {
   );
 }
 
-export default function Login() {
-  const { setUser, user } = useAuth();
-
+export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const {
-    mutateAsync: login,
+    mutateAsync: signUp,
     isPending,
     isSuccess,
     isError,
   } = useMutation({
     mutationFn: (data: { email: string; password: string }) =>
-      loginApiCall(data),
+      signUpApiCall(data),
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const res = await login({ email, password });
-      if (res.status === 200) {
-        const { user: newUser, token, refreshToken } = res.data;
-
-        setUser(newUser);
-        setApiClientTokens(token, refreshToken);
+      const res = await signUp({ email, password });
+      if (res.status === 201) {
+        return <Navigate to="/login" />;
       }
     } catch (e) {
-      // Empty catch, it's ok for now
+      // Handle the error (show message or something)
     }
   };
 
-  if (user) {
-    return <Navigate to="/home" />;
-  }
-
-  // Bad, don't do this :)
-  const LoginForm = () => (
+  const SignUpForm = () => (
     <Box display="flex" flexDirection="column" alignItems="center">
       <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Sign in
+        Sign Up
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
+          autoFocus
           margin="normal"
           required
           fullWidth
           label="Email"
           autoComplete="email"
-          autoFocus
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -100,21 +88,17 @@ export default function Login() {
           variant="contained"
           sx={{ mt: 3, mb: 2, bgcolor: "secondary.main" }}
         >
-          Sign In
+          Sign Up
         </Button>
 
-        {/* TODO: Change link to /signup */}
-        <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
+        <Link to="/login">{"Already have an account? Login"}</Link>
       </Box>
     </Box>
   );
 
-  const showLoader = isPending || (isSuccess && !user);
-
-  // TODO: If error, handle it (show message or something)
   return (
     <Container maxWidth="xs" sx={{ py: "12lvh" }}>
-      {showLoader ? <CircularProgress sx={{ py: "12lvh" }} /> : <LoginForm />}
+      {isPending ? <CircularProgress sx={{ py: "12lvh" }} /> : <SignUpForm />}
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );

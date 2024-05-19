@@ -1,9 +1,9 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import LoginPage from "../../features/LoginPage";
+import SignUpPage from "../../features/SignUpPage";
 
 function Index() {
-  return <LoginPage />;
+  return <SignUpPage />;
 }
 
 export const Route = createLazyFileRoute("/signup/")({
