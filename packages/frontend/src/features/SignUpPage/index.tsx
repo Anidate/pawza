@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
-import { Link, Navigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 
 import { signUp as signUpApiCall } from "../../api/sign-up";
@@ -29,6 +29,8 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const {
     mutateAsync: signUp,
     isPending,
@@ -45,10 +47,12 @@ export default function SignUpPage() {
     try {
       const res = await signUp({ email, password });
       if (res.status === 201) {
-        return <Navigate to="/login" />;
+        console.log(res);
+        navigate("/login");
       }
     } catch (e) {
       // Handle the error (show message or something)
+      console.error(e);
     }
   };
 
