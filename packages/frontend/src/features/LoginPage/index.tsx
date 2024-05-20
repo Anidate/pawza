@@ -34,21 +34,8 @@ export default function Login() {
     isSuccess,
     isError,
   } = useMutation({
-    // mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
-
-    mutationFn(data: { email: string; password: string }) {
-      return loginApiCall(data);
-    },
+    mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
   });
-
-  // Invoke the useMutation function
-  useMutation(
-    // Open an object definition
-    {
-      // The key mutationFn has the value:
-      mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
-    },
-  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
