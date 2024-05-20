@@ -5,11 +5,9 @@ export interface UserAuthData {
 }
 
 interface AuthContextData {
-  token?: string;
-  refreshToken?: string;
-  user?: UserAuthData;
-  setAuth: (params: { user: UserAuthData; token: string; refreshToken: string }) => void;
-  resetAuth: () => void;
+  isInitiating: boolean;
+  user: UserAuthData | null | undefined;
+  setUser: (user: UserAuthData | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextData>({} as any);
