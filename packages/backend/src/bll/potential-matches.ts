@@ -1,12 +1,12 @@
+import type mongoose from 'mongoose';
 import { type FilterQuery } from 'mongoose';
 
 import { PotentialMatchModel, PotentialMatchStatus } from '../models/potential-match.js';
 import { type UserDoc, UserModel, UserPurpose } from '../models/user.js';
 
-export const getPotentialMatches = async (user: UserDoc) => {
-  // TODO: GAL
-  // MUST HAVE FOR WEDNESDAY:
-  // change this so that if there is a PotentialMatch of status ACCEPTED, that user will NOT be suggested
+export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | string) => {
+  const user = await UserModel.findById(userId).orFail();
+
   const matchesToIgnore = await PotentialMatchModel.find({
     user: user._id,
     status: { $ne: PotentialMatchStatus.Pending },
@@ -25,14 +25,7 @@ export const getPotentialMatches = async (user: UserDoc) => {
     userChoices.purpose = { $in: [user.purpose, UserPurpose.All] };
   }
 
-  const matches = await UserModel.aggregate([
-    {
-      $match: userChoices,
-    },
-    {
-      $sample: { size: 10 },
-    },
-  ]);
+  const matches = await UserModel.aggregate([{ $match: userChoices }, { $sample: { size: 10 } }]);
 
   return matches;
 };
