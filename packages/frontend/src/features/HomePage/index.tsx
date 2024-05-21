@@ -1,188 +1,217 @@
+/* +++++++++++++++++++++++++++++++++++++++++++++++++ Imports +++++++++++++++++++++++++++++++++++++++++++++++++ */
 import { Box } from '@mui/material';
 import GuyWithDog from '@src/assets/guy_with_dog.webp';
 import WomanWithDog from '@src/assets/woman_with_dog.jpg';
-import { useEffect, useState } from 'react';
-
-import TinderCard from 'react-tinder-card'
+import { useEffect, useRef, useState } from 'react';
+import TinderCard from 'react-tinder-card';
 
 import ImageCard from './ImageCard';
 import PawButton from './PawButton';
 
-
-
 function Home() {
-  
+  /* +++++++++++++++++++++++++++++++++++++++++++++++++ Data Base +++++++++++++++++++++++++++++++++++++++++++++++++ */
+  const db = [
+    {
+      name: 'Rafi Zanzifar',
+      img: GuyWithDog,
+    },
+
+    {
+      name: 'Simha Riff',
+      img: WomanWithDog,
+    },
+  ];
+
+  /* +++++++++++++++++++++++++++++++++++++++++++++++++ Function Components +++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+  // Shows which direction the user swiped the card
   const onSwipe = (direction) => {
     console.log(direction);
+  };
 
-  }
-  
-  const onCardLeftScreen = () => {
-    console.log(' left the screen');
-    setGuy(guy-1);
-  }
-  const db=[
-    {
-      name: "Rafi Zanzifar",
-      img : GuyWithDog
-    },
-
-    {
-      name: "Simha Riff",
-      img : WomanWithDog
-    },
-  ]
-  const [guy, setGuy] = useState(db.length-1);
-  useEffect(()=>{
+  // Set the size of the data base array
+  const [guy, setGuy] = useState(db.length - 1);
+  useEffect(() => {
     console.log(guy);
-    
-  },[guy])
+  }, [guy]);
+
+  const canSwipe = guy >= 0;
+
+  // The card has left the screen and decreased the data base of characters
+  const onCardLeftScreen = () => {
+    console.log(`${db[guy].name} left the screen`);
+    setGuy(guy - 1);
+  };
+
+  const topCard = useRef(null);
+
+  const swipe = async (dir: 'left' | 'right') => {
+    if (canSwipe && guy < db.length) {
+      await topCard.current.swipe(dir); // Swipe the card!
+    }
+  };
+
+  /* const loadMoreSuggestions = () => {
+    console.log(`New db stack approached: \n ${db[guy].name}`);
+    setGuy(guy);
+  }; */
+
+  // TODO:
+  // Show the next suggestion
+  // If we have 2 suggestions remaining, call function "loadMoreSuggestions"
+  /* if (only 2 left) {
+      loadMoreSuggestions()
+    } */
+  // For now this function can be empty
+  // render 2 imges combined 1 with absolute and the 2nd absolute
+
+  /* +++++++++++++++++++++++++++++++++++++++++++++++++ UI +++++++++++++++++++++++++++++++++++++++++++++++++ */
+  // sx={{ }}
+
+  if (guy > 0)
+    return (
+      <Box
+        key={2024}
+        p={4}
+        sx={{
+          boxSizing: 'border-box',
+          gap: '3rem',
+          position: 'relative',
+          width: '500px',
+          height: '750px',
+        }}
+        display="flex"
+        flexDirection="column"
+        justifyContent="end"
+      >
+        {db.map((character, index) => (
+          <>
+            {
+              <Box key={index - 1}>
+                <Box sx={{ position: 'absolute', bottom: 30 }}>
+                  <TinderCard
+                    key={index}
+                    onSwipe={onSwipe} // {onSwipe}
+                    onCardLeftScreen={() => onCardLeftScreen()}
+                    preventSwipe={['up', 'down']}
+                  >
+                    <ImageCard key={guy} src={db[guy - 1].img} draggable="false"></ImageCard>
+                  </TinderCard>
+                </Box>
+                <Box sx={{ position: 'absolute', bottom: 30 }}>
+                  <TinderCard
+                    ref={topCard}
+                    key={index}
+                    onSwipe={onSwipe}
+                    onCardLeftScreen={() => onCardLeftScreen()}
+                    preventSwipe={['up', 'down']}
+                  >
+                    <ImageCard key={guy * 16} src={db[guy].img} draggable="false"></ImageCard>
+                  </TinderCard>
+                </Box>
+              </Box>
+            }
+          </>
+        ))}
+
+        <Box key={66} display="flex" flexDirection="row" justifyContent="space-between" px={4}>
+          <PawButton color="red" onClick={() => swipe('left')} />
+          <PawButton color="green" onClick={() => swipe('right')} />
+        </Box>
+      </Box>
+    );
   return (
     <Box
+      key={2025}
       p={4}
       sx={{
-        height: '100%',
         boxSizing: 'border-box',
         gap: '3rem',
+        position: 'relative',
+        width: '500px',
+        height: '750px',
       }}
       display="flex"
       flexDirection="column"
       justifyContent="end"
-
-      
     >
-    
-      {db.map((character, index) => (
-        <>
-        {index===guy&&(
-              <TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen()} preventSwipe={['up', 'down']}>
-              <Box>
-              <ImageCard key={index} src={db[index].img} draggable="false"></ImageCard>3
-              </Box>
-            </TinderCard>
-        )}
-        </>
-        ))} 
-        
+      <Box>
+        <Box sx={{ position: 'absolute', bottom: 30 }}>
+          <TinderCard
+            ref={topCard}
+            key={0}
+            onSwipe={onSwipe}
+            onCardLeftScreen={() => onCardLeftScreen()}
+            preventSwipe={['up', 'down']}
+          >
+            <ImageCard key={guy * 16} src={db[0].img} draggable="false"></ImageCard>
+          </TinderCard>
+        </Box>
 
-      <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
-        <PawButton color="red" onClick={onSwipe} />
-        <PawButton color="green" onClick={onSwipe} />
+        <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
+          <PawButton color="red" onClick={() => swipe('left')} />
+          <PawButton color="green" onClick={() => swipe('right')} />
+        </Box>
       </Box>
     </Box>
   );
 }
 
-//<TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen('fooBar')} preventSwipe={['right', 'left']}>Hello, World!</TinderCard>
-//<ImageCard src={GuyWithDog} style={{ display: !guy ? 'none' : '' }} />
-//<ImageCard src={WomanWithDog} style={{ display: guy ? 'none' : '' }} />
 export default Home;
 
+/*
+         /* <Box>
+              <TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen()} preventSwipe={['up', 'down']}>
+              <Box>
+              <ImageCard key={index} src={db[index].img} draggable="false" style={{}}></ImageCard>
+              </Box>
+            </TinderCard>
+            <TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen()} preventSwipe={['up', 'down']}>
+              <Box>
+              <ImageCard key={index} src={db[index-1].img} draggable="false" style={{display:'none'}}></ImageCard>
+              </Box>
+            </TinderCard>
+          </Box>
 
-/*import React, { useState, useMemo, useRef } from 'react'
-import TinderCard from 'react-tinder-card'
 
-const db = [
-  {
-    name: 'Richard Hendricks',
-    url: './img/richard.jpg'
-  },
-  {
-    name: 'Erlich Bachman',
-    url: './img/erlich.jpg'
-  },
-  {
-    name: 'Monica Hall',
-    url: './img/monica.jpg'
-  },
-  {
-    name: 'Jared Dunn',
-    url: './img/jared.jpg'
-  },
-  {
-    name: 'Dinesh Chugtai',
-    url: './img/dinesh.jpg'
-  }
-]
+          <Box sx={{ position: 'absolute', order: 1 }}>
+                  <TinderCard
+                    key={index - 1}
+                    onSwipe={onSwipe}
+                    onCardLeftScreen={() => onCardLeftScreen()}
+                    preventSwipe={['up', 'down']}
+                  >
+                    <ImageCard key={guy * 16} src={db[index].img} draggable="false"></ImageCard>
+                  </TinderCard>
+                </Box>
 
-function Advanced () {
-  const [currentIndex, setCurrentIndex] = useState(db.length - 1)
-  const [lastDirection, setLastDirection] = useState()
-  // used for outOfFrame closure
-  const currentIndexRef = useRef(currentIndex)
-
-  const childRefs = useMemo(
-    () =>
-      Array(db.length)
-        .fill(0)
-        .map((i) => React.createRef()),
-    []
-  )
-
-  const updateCurrentIndex = (val) => {
-    setCurrentIndex(val)
-    currentIndexRef.current = val
-  }
-
-  const canGoBack = currentIndex < db.length - 1
-
-  const canSwipe = currentIndex >= 0
-
-  // set last direction and decrease current index
-  const swiped = (direction, nameToDelete, index) => {
-    setLastDirection(direction)
-    updateCurrentIndex(index - 1)
-  }
-
-  const outOfFrame = (name, idx) => {
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current)
-    // handle the case in which go back is pressed before card goes outOfFrame
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
-    // TODO: when quickly swipe and restore multiple times the same card,
-    // it happens multiple outOfFrame events are queued and the card disappear
-    // during latest swipes. Only the last outOfFrame event should be considered valid
-  }
-
-  const swipe = async (dir) => {
-    if (canSwipe && currentIndex < db.length) {
-      await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
-    }
-  }
-
-  // increase current index and show card
-  const goBack = async () => {
-    if (!canGoBack) return
-    const newIndex = currentIndex + 1
-    updateCurrentIndex(newIndex)
-    await childRefs[newIndex].current.restoreCard()
-  }
-
-  return (
-    <div>
-      <link
-        href='https://fonts.googleapis.com/css?family=Damion&display=swap'
-        rel='stylesheet'
-      />
-      <link
-        href='https://fonts.googleapis.com/css?family=Alatsi&display=swap'
-        rel='stylesheet'
-      />
-      <h1>React Tinder Card</h1>
-      <div className='cardContainer'>
-        {db.map((character, index) => (
-          <TinderCard
-            ref={childRefs[index]}
-            className='swipe'
-            key={character.name}
-            onSwipe={(dir) => swiped(dir, character.name, index)}
-            onCardLeftScreen={() => outOfFrame(character.name, index)}
-          >
-            <div
-              style={{ backgroundImage: 'url(' + character.url + ')' }}
-              className='card'
-            >
-              <h3>{character.name}</h3>
-            </div>
-          </TinderCard>
-        ))}*/
- 
+                {db.map((character, index) => (
+          <>
+            {
+              <Box key={index - 1}>
+                <Box sx={{ position: 'absolute', bottom: 45 }}>
+                  <TinderCard
+                    key={index}
+                    onSwipe={(dir) => swiped(dir, character.name, index)} // {onSwipe}
+                    onCardLeftScreen={() => onCardLeftScreen()}
+                    preventSwipe={['up', 'down']}
+                  >
+                    <ImageCard key={guy} src={db[guy - 1].img} draggable="false"></ImageCard>
+                  </TinderCard>
+                </Box>
+                <Box sx={{ position: 'absolute', bottom: 45 }}>
+                  <TinderCard
+                    ref={topCard}
+                    key={index}
+                    onSwipe={(dir) => swiped(dir, character.name, index)}
+                    onCardLeftScreen={() => onCardLeftScreen()}
+                    preventSwipe={['up', 'down']}
+                  >
+                    <ImageCard key={guy * 16} src={db[guy].img} draggable="false"></ImageCard>
+                  </TinderCard>
+                </Box>
+              </Box>
+            }
+          </>
+        ))}
+*/
