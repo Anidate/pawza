@@ -32,15 +32,15 @@ function Home() {
         <ImageCard
           src={GuyWithDog}
           name="John"
-          age={30}
-          description="Loves hiking with his dog."
+          age={31}
+          description="Love hiking with my dog."
           style={{ display: !guy ? 'none' : '' }}
         />
         <ImageCard
           src={WomanWithDog}
           name="Jane"
-          age={28}
-          description="Enjoys long walks on the beach with her furry friend."
+          age={42}
+          description="Enjoy long walks on the beach with my furry friend."
           style={{ display: guy ? 'none' : '' }}
         />
       </Box>
