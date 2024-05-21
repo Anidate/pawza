@@ -1,9 +1,9 @@
-import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box } from '@mui/material';
+import { useState } from 'react';
 
-import ImageCard from "./ImageCard";
-import PawButton from "./PawButton";
-import userData from "./UserData";
+import ImageCard from './ImageCard';
+import PawButton from './PawButton';
+import userData from './UserData';
 
 function Home() {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
@@ -13,9 +13,7 @@ function Home() {
   };
 
   const handlePreviousUser = () => {
-    setCurrentUserIndex(
-      (prevIndex) => (prevIndex - 1 + userData.length) % userData.length
-    );
+    setCurrentUserIndex((prevIndex) => (prevIndex - 1 + userData.length) % userData.length);
   };
 
   const currentUser = userData[currentUserIndex];
@@ -23,51 +21,30 @@ function Home() {
   return (
     <Box
       sx={{
-        padding: "1rem",
-        height: "100%",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "end",
-        gap: "3rem",
+        padding: '1rem',
+        height: '100%',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'end',
+        gap: '3rem',
       }}
     >
-      <Box
-        sx={{
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <ImageCard src={currentUser.image} style={{ borderRadius: "16px" }} />
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            padding: "0.5rem",
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
-            color: "white",
-            width: "100%",
-            boxSizing: "border-box",
-            borderRadius: "0 0 16px 16px",
-          }}
-        >
-          <Typography variant="h6">
-            {currentUser.name}, {currentUser.age}
-          </Typography>
-          <Typography variant="body2">{currentUser.description}</Typography>
-        </Box>
-      </Box>
+      <ImageCard
+        src={currentUser.image}
+        name={currentUser.name}
+        age={currentUser.age}
+        description={currentUser.description}
+        style={{ borderRadius: '16px' }}
+      />
 
       <Box
+        px={'1rem'}
         sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingLeft: "1rem",
-          paddingRight: "1rem",
-          marginTop: "1rem",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: '1rem',
         }}
       >
         <PawButton color="red" onClick={handlePreviousUser} />
