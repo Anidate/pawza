@@ -1,34 +1,46 @@
 /* +++++++++++++++++++++++++++++++++++++++++++++++++ Imports +++++++++++++++++++++++++++++++++++++++++++++++++ */
 import { Box, Typography } from '@mui/material';
-import GuyWithDog from '@src/assets/guy_with_dog.webp';
-import WomanWithDog from '@src/assets/woman_with_dog.jpg';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
+import { getPotentialMatches } from '../../api/get-potential-matches';
+import FullScreenLoader from '../Loader/FullScreenLoader';
 import TinderCard from '../TinderCard';
-// import TinderCard from 'react-tinder-card';
 import ImageCard from './ImageCard';
 import PawButton from './PawButton';
 
-const db = [
-  {
-    name: 'Rafi Zanzifar',
-    img: GuyWithDog,
-  },
-
-  {
-    name: 'Simha Riff',
-    img: WomanWithDog,
-  },
-];
-
 function Home() {
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [suggestionIndex, setSuggestionIndex] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+
   const topCard = useRef<any>(null);
 
-  const canSwipe = suggestionIndex <= db.length;
+  const {
+    data: res,
+    isLoading,
+    isPending,
+    refetch,
+  } = useQuery({
+    queryKey: ['suggestions'],
+    queryFn: getPotentialMatches,
+  });
+
+  useEffect(() => {
+    if (!res) return;
+
+    setSuggestions((p) => [
+      ...p.filter((suggestion) => !suggestion.addressed),
+      ...res.data.map((x: any) => ({ ...x, addressed: false })),
+    ]);
+  }, [res]);
+
+  const canSwipe = suggestionIndex <= suggestions.length;
   const swipe = async (dir: 'left' | 'right') => {
-    if (canSwipe && suggestionIndex < db.length && topCard.current) {
+    if (canSwipe && topCard.current) {
+      setIsSwiping(true);
       await topCard.current.swipe(dir); // Swipe the card!
+      setIsSwiping(false);
     }
   };
 
@@ -36,41 +48,44 @@ function Home() {
     if (topCard.current) {
       topCard.current.restoreCard({ instant: true });
     }
-  }, [suggestionIndex, topCard]);
 
-  /* const loadMoreSuggestions = () => {
-    console.log(`New db stack approached: \n ${db[guy].name}`);
-    setGuy(guy);
-  }; */
+    if (suggestions.length - suggestionIndex <= 5 && !isPending) {
+      refetch();
+    }
+  }, [isPending, refetch, suggestionIndex, suggestions.length, topCard]);
 
-  const suggested = db[suggestionIndex];
-  const nextSuggestion = db[suggestionIndex + 1];
+  const suggested = suggestions[suggestionIndex];
+  const nextSuggestion = suggestions[suggestionIndex + 1];
+
+  if (isLoading) {
+    return <FullScreenLoader />;
+  }
 
   return (
-    <Box p={4} display="flex" flexDirection="column">
+    <Box py={4} display="flex" flexDirection="column" boxSizing="border-box" height="100%">
       {suggested ? (
         <>
-          <Box position="relative" overflow="hidden">
+          <Box position="relative" overflow="hidden" flexGrow={1}>
             {nextSuggestion && (
-              <Box zIndex={0} position="absolute">
-                <ImageCard src={nextSuggestion.img} draggable="false"></ImageCard>
+              <Box zIndex={0} position="absolute" px={4}>
+                <ImageCard src={nextSuggestion.photo} draggable="false"></ImageCard>
               </Box>
             )}
 
-            <Box>
+            <Box px={4}>
               <TinderCard
                 ref={topCard}
                 onCardLeftScreen={() => setSuggestionIndex((p) => p + 1)}
                 preventSwipe={['up', 'down']}
               >
-                <ImageCard src={suggested.img} draggable="false"></ImageCard>
+                <ImageCard src={suggested.photo} draggable="false"></ImageCard>
               </TinderCard>
             </Box>
           </Box>
 
           <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
-            <PawButton color="red" onClick={() => swipe('left')} />
-            <PawButton color="green" onClick={() => swipe('right')} />
+            <PawButton color="red" disabled={isSwiping} onClick={() => swipe('left')} />
+            <PawButton color="green" disabled={isSwiping} onClick={() => swipe('right')} />
           </Box>
         </>
       ) : (
