@@ -1,54 +1,53 @@
 import { Box } from '@mui/material';
+import GuyWithDog from '@src/assets/guy_with_dog.webp';
+import WomanWithDog from '@src/assets/woman_with_dog.jpg';
 import { useState } from 'react';
 
 import ImageCard from './ImageCard';
 import PawButton from './PawButton';
-import userData from './UserData';
 
 function Home() {
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
-
-  const handleNextUser = () => {
-    setCurrentUserIndex((prevIndex) => (prevIndex + 1) % userData.length);
-  };
-
-  const handlePreviousUser = () => {
-    setCurrentUserIndex((prevIndex) => (prevIndex - 1 + userData.length) % userData.length);
-  };
-
-  const currentUser = userData[currentUserIndex];
+  const [guy, setGuy] = useState(true);
 
   return (
     <Box
+      p={4}
       sx={{
-        padding: '1rem',
         height: '100%',
         boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'end',
         gap: '3rem',
       }}
+      display="flex"
+      flexDirection="column"
+      justifyContent="end"
     >
-      <ImageCard
-        src={currentUser.image}
-        name={currentUser.name}
-        age={currentUser.age}
-        description={currentUser.description}
-        style={{ borderRadius: '16px' }}
-      />
-
       <Box
-        px={'1rem'}
         sx={{
+          position: 'relative',
+          height: '500px',
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: '1rem',
+          alignItems: 'center',
         }}
       >
-        <PawButton color="red" onClick={handlePreviousUser} />
-        <PawButton color="green" onClick={handleNextUser} />
+        <ImageCard
+          src={GuyWithDog}
+          name="John"
+          age={30}
+          description="Loves hiking with his dog."
+          style={{ display: !guy ? 'none' : '' }}
+        />
+        <ImageCard
+          src={WomanWithDog}
+          name="Jane"
+          age={28}
+          description="Enjoys long walks on the beach with her furry friend."
+          style={{ display: guy ? 'none' : '' }}
+        />
+      </Box>
+
+      <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
+        <PawButton color="red" onClick={() => setGuy((p) => !p)} />
+        <PawButton color="green" onClick={() => setGuy((p) => !p)} />
       </Box>
     </Box>
   );

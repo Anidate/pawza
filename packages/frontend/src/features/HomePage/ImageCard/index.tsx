@@ -18,11 +18,12 @@ function ImageCard({ name, age, description, ...props }: ImageCardProps) {
     >
       <img {...props} style={{ borderRadius: '2rem', width: '100%', ...props.style }} />
       <Box
+        px={'1rem'} // Adjusted padding
+        py={'0.5rem'} // Added padding
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
-          padding: '0.5rem',
           backgroundColor: 'rgba(0, 0, 0, 0.2)',
           color: 'white',
           width: '100%',
