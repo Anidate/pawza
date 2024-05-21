@@ -6,4 +6,5 @@ export const toMatchDto = (user: UserDoc): MatchDto => ({
   firstName: user.firstName,
   birthDate: user.birthDate,
   gender: user.gender,
+  photo: user.photos[0],
 });
