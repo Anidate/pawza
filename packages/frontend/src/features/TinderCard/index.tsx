@@ -112,9 +112,8 @@ export default React.forwardRef<any, any>(
     settings.swipeThreshold = swipeThreshold;
 
     React.useImperativeHandle(ref, () => ({
-      async swipe(dir = 'right') {
+      async swipe(dir = 'right', power = 1.6) {
         if (onSwipe) onSwipe(dir);
-        const power = 1.3;
         const disturbance = (Math.random() - 0.5) / 2;
         if (dir === 'right') {
           await animateOut({ x: power, y: disturbance }, setSpringTarget, width, height);

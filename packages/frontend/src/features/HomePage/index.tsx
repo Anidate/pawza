@@ -35,11 +35,10 @@ function Home() {
     ]);
   }, [res]);
 
-  const canSwipe = suggestionIndex <= suggestions.length;
   const swipe = async (dir: 'left' | 'right') => {
-    if (canSwipe && topCard.current) {
+    if (topCard.current) {
       setIsSwiping(true);
-      await topCard.current.swipe(dir); // Swipe the card!
+      await topCard.current.swipe(dir, 1.6); // Swipe the card!
       setIsSwiping(false);
     }
   };
@@ -57,6 +56,10 @@ function Home() {
   const suggested = suggestions[suggestionIndex];
   const nextSuggestion = suggestions[suggestionIndex + 1];
 
+  const onCardLeftScreen = (dir: 'right' | 'left') => {
+    setSuggestionIndex((p) => p + 1);
+  };
+
   if (isLoading) {
     return <FullScreenLoader />;
   }
@@ -73,11 +76,7 @@ function Home() {
             )}
 
             <Box px={4}>
-              <TinderCard
-                ref={topCard}
-                onCardLeftScreen={() => setSuggestionIndex((p) => p + 1)}
-                preventSwipe={['up', 'down']}
-              >
+              <TinderCard ref={topCard} onCardLeftScreen={onCardLeftScreen} preventSwipe={['up', 'down']}>
                 <ImageCard src={suggested.photo} draggable="false"></ImageCard>
               </TinderCard>
             </Box>
