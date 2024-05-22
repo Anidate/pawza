@@ -21,29 +21,8 @@ function Home() {
       flexDirection="column"
       justifyContent="end"
     >
-      <Box
-        sx={{
-          position: 'relative',
-          height: '500px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <ImageCard
-          src={GuyWithDog}
-          name="John"
-          age={31}
-          description="Love hiking with my dog."
-          style={{ display: !guy ? 'none' : '' }}
-        />
-        <ImageCard
-          src={WomanWithDog}
-          name="Jane"
-          age={42}
-          description="Enjoy long walks on the beach with my furry friend."
-          style={{ display: guy ? 'none' : '' }}
-        />
-      </Box>
+      <ImageCard src={GuyWithDog} style={{ display: !guy ? 'none' : '' }} />
+      <ImageCard src={WomanWithDog} style={{ display: guy ? 'none' : '' }} />
 
       <Box display="flex" flexDirection="row" justifyContent="space-between" px={4}>
         <PawButton color="red" onClick={() => setGuy((p) => !p)} />
