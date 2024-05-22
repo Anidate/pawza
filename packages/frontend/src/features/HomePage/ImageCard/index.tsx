@@ -1,35 +1,25 @@
 import { Box, Typography } from '@mui/material';
-import { type ComponentPropsWithRef } from 'react';
 
-interface ImageCardProps extends ComponentPropsWithRef<'img'> {
+interface ImageCardProps {
   name: string;
   age: number;
   description: string;
+  image: string;
 }
 
-function ImageCard({ name, age, description, ...props }: ImageCardProps) {
+function ImageCard({ name, age, description, image }: ImageCardProps) {
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        borderRadius: '16px',
-      }}
-    >
-      <img {...props} style={{ borderRadius: '2rem', width: '100%', ...props.style }} />
+    <Box position="relative" borderRadius="2rem">
+      <img style={{ borderRadius: '2rem', width: '100%' }} src={image} />
       <Box
-        px={'1rem'}
-        py={'0.5rem'}
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          color: 'white',
-          width: '100%',
-          boxSizing: 'border-box',
-          borderRadius: '0 0 16px 16px',
-        }}
+        py="0.5rem"
+        position="absolute"
+        bottom={0}
+        left={0}
+        bgcolor="rgba(0, 0, 0, 0.4)"
+        color="white"
+        width="100%"
+        borderRadius="0 0 2rem 2rem"
       >
         <Typography variant="h6">
           {name}, {age}
