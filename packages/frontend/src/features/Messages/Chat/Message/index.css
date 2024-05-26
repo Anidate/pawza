@@ -1,0 +1,6 @@
+.ChatApp {
+  background-color: #eae5e5;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
