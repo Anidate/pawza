@@ -150,6 +150,9 @@ importers:
       '@react-spring/web':
         specifier: 9.5.5
         version: 9.5.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rive-app/react-canvas':
+        specifier: ^4.10.0
+        version: 4.10.0(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^5.36.2
         version: 5.36.2(react@18.2.0)
@@ -1083,6 +1086,14 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  '@rive-app/canvas@2.16.0':
+    resolution: {integrity: sha512-shbtAEZ3Iq6HSCA1EpdoU7CMwY5+p5pD8NTVmp31N+eq8Obxnorh+L/M4PJhqQR8hONMUwgcVLCIrNTdcXUNoA==}
+
+  '@rive-app/react-canvas@4.10.0':
+    resolution: {integrity: sha512-0Dc1OS2n/22lTPvcawbRcGiJyDM92k8iEn8hy+/vyfbUA9+uze6YDPDsbDZUpdLGU46lDP6rbkcPl+3TWo1WwQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   '@rollup/pluginutils@5.1.0':
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
@@ -4918,6 +4929,13 @@ snapshots:
       '@react-spring/types': 9.5.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@rive-app/canvas@2.16.0': {}
+
+  '@rive-app/react-canvas@4.10.0(react@18.2.0)':
+    dependencies:
+      '@rive-app/canvas': 2.16.0
+      react: 18.2.0
 
   '@rollup/pluginutils@5.1.0(rollup@4.12.1)':
     dependencies:

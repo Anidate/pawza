@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
@@ -12,16 +13,42 @@ import { type FormEvent, useState } from 'react';
 import { signUp as signUpApiCall } from '../../api/sign-up';
 import FullScreenLoader from '../Loader/FullScreenLoader';
 
-function Copyright(props: any) {
+/* function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       Copyright © Pawza {new Date().getFullYear()}.
     </Typography>
   );
-}
+} */
 
 export default function SignUpPage() {
+  const { rive, RiveComponent } = useRive({
+    src: 'login_screen_character.riv',
+    stateMachines: 'StateMachine1',
+    autoplay: true,
+    artboard: 'Artboard',
+  });
+
+  const handsUp = useStateMachineInput(rive, 'StateMachine1', 'hands_up');
+  const check = useStateMachineInput(rive, 'StateMachine1', 'Check');
+  const look = useStateMachineInput(rive, 'StateMachine1', 'Look');
+  const fail = useStateMachineInput(rive, 'StateMachine1', 'fail');
+  const success = useStateMachineInput(rive, 'StateMachine1', 'success');
+
+  const animationHandle = () => {
+    handsUp.value == true ? (handsUp.value = false) : console.log('test');
+    console.log(check);
+    console.log(look);
+  };
   const [email, setEmail] = useState('');
+
+  const checkHandle = (e) => {
+    setEmail(e.target.value);
+    handsUp.value = false;
+    check.value = true;
+    look.value = email.length * 3;
+  };
+
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -54,11 +81,14 @@ export default function SignUpPage() {
         <FullScreenLoader />
       ) : (
         <Box display="flex" flexDirection="column" alignItems="center">
+          <Box sx={{ width: 500, height: 200 }}>
+            <RiveComponent />
+          </Box>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Sign In
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -69,7 +99,7 @@ export default function SignUpPage() {
               label="Email"
               autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => checkHandle(e)}
             />
             <TextField
               margin="normal"
@@ -81,16 +111,22 @@ export default function SignUpPage() {
               sx={{ mt: 0 }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onSelect={() => (handsUp.value = true)}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
-              Sign Up
+            <Button
+              onClick={() => animationHandle()}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}
+            >
+              Sign In
             </Button>
 
             <Link to="/login">{'Already have an account? Login'}</Link>
           </Box>
         </Box>
       )}
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }
+// <Copyright sx={{ mt: 8, mb: 4 }} />
