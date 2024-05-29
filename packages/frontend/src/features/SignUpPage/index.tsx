@@ -37,6 +37,7 @@ export default function SignUpPage() {
 
   const animationHandle = () => {
     handsUp.value == true ? (handsUp.value = false) : console.log('test');
+    check.value = false;
     console.log(check);
     console.log(look);
   };
