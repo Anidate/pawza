@@ -13,13 +13,13 @@ import { type FormEvent, useState } from 'react';
 import { signUp as signUpApiCall } from '../../api/sign-up';
 import FullScreenLoader from '../Loader/FullScreenLoader';
 
-/* function Copyright(props: any) {
+function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       Copyright © Pawza {new Date().getFullYear()}.
     </Typography>
   );
-} */
+}
 
 export default function SignUpPage() {
   const { rive, RiveComponent } = useRive({
@@ -89,7 +89,7 @@ export default function SignUpPage() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            Sign Up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -120,14 +120,14 @@ export default function SignUpPage() {
               variant="contained"
               sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}
             >
-              Sign In
+              Sign Up
             </Button>
 
             <Link to="/login">{'Already have an account? Login'}</Link>
           </Box>
+          <Copyright sx={{ mt: 8, mb: 4 }} />
         </Box>
       )}
     </Container>
   );
 }
-// <Copyright sx={{ mt: 8, mb: 4 }} />
