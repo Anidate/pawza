@@ -35,6 +35,7 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
   const [vaccinated, setVac] = React.useState('');
   const [petName, setPetName] = React.useState('');
   const [breed, setBreed] = React.useState('');
+  const [dob, setDob] = React.useState<string | null>(null);
   const pet1: PetFields = petDetails;
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,12 +55,13 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '') {
+      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '' && dob !== null) {
         changeState(true);
         pet1.petNameField = petName;
         pet1.breedField = breed;
         pet1.sizeField = size;
         pet1.vacField = vaccinated;
+        pet1.DOB = new Date(dob);
         changePetState(pet1);
       } else changeState(false);
     }, 1000);
@@ -68,17 +70,18 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '') {
+      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '' && dob !== null) {
         changeState(true);
         pet1.petNameField = petName;
         pet1.breedField = breed;
         pet1.sizeField = size;
         pet1.vacField = vaccinated;
+        pet1.DOB = new Date(dob);
         changePetState(pet1);
       } else changeState(false);
     }, 250);
     return () => clearTimeout(timeout);
-  }, [vaccinated, size]);
+  }, [vaccinated, size, dob]);
 
   function Copyright(props: any) {
     return (
@@ -183,7 +186,13 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
               <Grid item xs={12} sm={12}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
-                    <DatePicker label="Birth Date" sx={{ width: '100%' }} />
+                    <DatePicker
+                      label="Birth Date"
+                      sx={{ width: '100%' }}
+                      onChange={(newValue: string | null) => {
+                        setDob(newValue);
+                      }}
+                    />
                   </DemoContainer>
                 </LocalizationProvider>
               </Grid>

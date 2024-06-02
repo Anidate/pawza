@@ -26,6 +26,7 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
   const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [dob, setDob] = React.useState<string | null>(null);
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     switch (event.target.id) {
@@ -50,20 +51,22 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
     lastNameField: '',
     emailField: '',
     passwordField: '',
+    DOB: new Date(),
   };
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if (firstName !== '' && lastName !== '' && email !== '' && password !== '') {
+      if (firstName !== '' && lastName !== '' && email !== '' && password !== '' && dob !== null) {
         changeState(true);
         user1.firstNameField = firstName;
         user1.lastNameField = lastName;
         user1.emailField = email;
         user1.passwordField = password;
+        user1.DOB = new Date(dob);
         changeUserAttribute(user1);
       } else changeState(false);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [firstName, lastName, email, password]);
+  }, [firstName, lastName, email, password, dob]);
 
   function Copyright(props: any) {
     return (
@@ -135,7 +138,11 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Birth Date" sx={{ width: '100%' }} />
+                  <DatePicker
+                    label="Birth Date"
+                    sx={{ width: '100%' }}
+                    onChange={(newValue: string | null) => setDob(newValue || null)}
+                  />
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>

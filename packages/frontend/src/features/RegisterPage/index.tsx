@@ -20,6 +20,7 @@ export interface PetFields {
   vacField: string;
   petNameField: string;
   breedField: string;
+  DOB: Date;
 }
 
 export interface UserFields {
@@ -27,6 +28,7 @@ export interface UserFields {
   lastNameField: string;
   emailField: string;
   passwordField: string;
+  DOB: Date;
 }
 
 export default function HorizontalLinearStepper() {
@@ -40,6 +42,7 @@ export default function HorizontalLinearStepper() {
     vacField: '',
     petNameField: '',
     breedField: '',
+    DOB: new Date(),
   };
 
   const userInit: UserFields = {
@@ -47,6 +50,7 @@ export default function HorizontalLinearStepper() {
     lastNameField: '',
     emailField: '',
     passwordField: '',
+    DOB: new Date(),
   };
   const [userInfo, setUserInfo] = React.useState<UserFields>(userInit);
   const [petDet, setPetDet] = React.useState<PetFields>(petInit);
