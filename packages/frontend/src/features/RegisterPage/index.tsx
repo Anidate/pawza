@@ -12,10 +12,44 @@ import UserInfo from './userInfo';
 
 const steps = ['User Details', 'Pet Details', 'Terms&Conditions'];
 type SetCheckState = (x: boolean) => boolean;
+type SetPetDetState = (x: PetFields) => PetFields;
+type SetUserInfoState = (x: UserFields) => UserFields;
+
+export interface PetFields {
+  sizeField: string;
+  vacField: string;
+  petNameField: string;
+  breedField: string;
+}
+
+export interface UserFields {
+  firstNameField: string;
+  lastNameField: string;
+  emailField: string;
+  passwordField: string;
+}
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
+  const [petFill, setPetFill] = React.useState(false);
+  const [userFill, setUserFill] = React.useState(false);
+
+  const petInit: PetFields = {
+    sizeField: '',
+    vacField: '',
+    petNameField: '',
+    breedField: '',
+  };
+
+  const userInit: UserFields = {
+    firstNameField: '',
+    lastNameField: '',
+    emailField: '',
+    passwordField: '',
+  };
+  const [userInfo, setUserInfo] = React.useState<UserFields>(userInit);
+  const [petDet, setPetDet] = React.useState<PetFields>(petInit);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -46,11 +80,25 @@ export default function HorizontalLinearStepper() {
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>{steps[activeStep]}</Typography>
           <Box>
-            {activeStep === 0 && <UserInfo />}
-            {activeStep === 1 && <PetDetails />}
+            {activeStep === 0 && (
+              <UserInfo
+                user={userInfo}
+                changeUserAttribute={setUserInfo as any as SetUserInfoState}
+                changeState={setUserFill as any as SetCheckState}
+                fillState={userFill}
+              />
+            )}
+            {activeStep === 1 && (
+              <PetDetails
+                changeState={setPetFill as any as SetCheckState}
+                fillState={petFill}
+                petDetails={petDet}
+                changePetState={setPetDet as any as SetPetDetState}
+              />
+            )}
             {activeStep === 2 && (
               <>
-                <Terms checkChange={setChecked as any as SetCheckState} />
+                <Terms checkChange={setChecked as any as SetCheckState} checkState={checked} />
               </>
             )}
           </Box>
@@ -61,11 +109,11 @@ export default function HorizontalLinearStepper() {
               Back
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
-            {activeStep === steps.length - 1 ? (
-              checked && <Button onClick={handleNext}>Finish</Button>
-            ) : (
-              <Button onClick={handleNext}>Next</Button>
-            )}
+            {activeStep === steps.length - 1
+              ? checked && <Button onClick={handleNext}>Finish</Button>
+              : ((activeStep === 0 && userFill) || (activeStep === 1 && petFill)) && (
+                  <Button onClick={handleNext}>Next</Button>
+                )}
           </Box>
         </React.Fragment>
       )}

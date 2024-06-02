@@ -15,9 +15,71 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import * as React from 'react';
 
-export default function PetDetails() {
+import { type PetFields } from '.';
+
+type SetFillState = (x: boolean) => boolean;
+type SetPetDetState = (x: PetFields) => PetFields;
+interface PetProps {
+  changeState: SetFillState;
+  fillState: boolean;
+  petDetails: PetFields;
+  changePetState: SetPetDetState;
+  /* sizeField: string;
+  vacField: string;
+  petNameField: string;
+  breedField: string; */
+}
+
+export default function PetDetails({ changeState, fillState, petDetails, changePetState }: PetProps) {
   const [size, setSize] = React.useState('');
   const [vaccinated, setVac] = React.useState('');
+  const [petName, setPetName] = React.useState('');
+  const [breed, setBreed] = React.useState('');
+  const pet1: PetFields = petDetails;
+
+  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    switch (event.target.id) {
+      case 'petName':
+        setPetName(event.target.value);
+
+        break;
+      case 'Breed':
+        setBreed(event.target.value);
+
+        break;
+      default:
+        break;
+    }
+  };
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '') {
+        changeState(true);
+        pet1.petNameField = petName;
+        pet1.breedField = breed;
+        pet1.sizeField = size;
+        pet1.vacField = vaccinated;
+        changePetState(pet1);
+      } else changeState(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [petName, breed]);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '') {
+        changeState(true);
+        pet1.petNameField = petName;
+        pet1.breedField = breed;
+        pet1.sizeField = size;
+        pet1.vacField = vaccinated;
+        changePetState(pet1);
+      } else changeState(false);
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [vaccinated, size]);
+
   function Copyright(props: any) {
     return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -59,22 +121,36 @@ export default function PetDetails() {
                   id="petName"
                   label="Pet Name"
                   autoFocus
+                  value={petName}
+                  onChange={handleFormChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField required fullWidth id="Breed" label="Breed" name="breed" autoComplete="Breed" />
+                <TextField
+                  required
+                  fullWidth
+                  id="Breed"
+                  value={breed}
+                  label="Breed"
+                  name="breed"
+                  onChange={handleFormChange}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Box sx={{ minWidth: 120 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Vaccinated?</InputLabel>
+                    <InputLabel>Vaccinated?</InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
+                      labelId="Vaccinated"
                       id="demo-simple-select"
                       value={vaccinated}
                       label="Size"
+                      required
                       onChange={vaccinatedChange}
                     >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
                       <MenuItem value={10}>Yes</MenuItem>
                       <MenuItem value={20}>No</MenuItem>
                     </Select>
@@ -87,11 +163,15 @@ export default function PetDetails() {
                     <InputLabel id="demo-simple-select-label">Size</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                      id="Size"
                       value={size}
                       label="Size"
+                      required
                       onChange={handleChange}
                     >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
                       <MenuItem value={10}>S</MenuItem>
                       <MenuItem value={20}>M</MenuItem>
                       <MenuItem value={30}>L</MenuItem>
