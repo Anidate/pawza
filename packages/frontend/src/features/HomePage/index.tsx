@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
-import { getPotentialMatches } from '../../api/get-potential-matches';
+import { decidePotentialMatch, getPotentialMatches } from '../../api/potential-matches';
 import { useAuth } from '../Auth/useAuth';
 import FullScreenLoader from '../Loader/FullScreenLoader';
 import TinderCard from '../TinderCard';
@@ -37,17 +37,29 @@ function Home() {
     queryFn: getPotentialMatches,
   });
 
+  const { mutateAsync: callDecidePotentialMatch } = useMutation({
+    mutationFn: (data: Parameters<typeof decidePotentialMatch>[0]) => decidePotentialMatch(data),
+  });
+
   useEffect(() => {
     if (!res) return;
 
     setSuggestions((p) => [
       ...p.filter((suggestion) => !suggestion.addressed),
-      ...res.data.map((x: any) => ({ ...x, addressed: false })),
+      ...res.data
+        .filter((newSuggestion: any) => !p.find((existingSuggestion) => existingSuggestion.id === newSuggestion.id))
+        .map((x: any) => ({ ...x, addressed: false })),
     ]);
+
+    setSuggestionIndex(0);
   }, [res]);
 
   const swipe = async (dir: 'left' | 'right') => {
     if (topCard.current) {
+      const decision = dir === 'right' ? 'accept' : 'decline';
+      suggested.addressed = true;
+      callDecidePotentialMatch({ suggestedUserId: suggested.id, decision });
+
       setIsSwiping(true);
       await topCard.current.swipe(dir, 1.6); // Swipe the card!
       setIsSwiping(false);
@@ -59,16 +71,29 @@ function Home() {
       topCard.current.restoreCard({ instant: true });
     }
 
-    if (suggestions.length - suggestionIndex <= 5 && !isPending) {
+    if (
+      suggestionIndex !== 0 &&
+      suggestions.length &&
+      suggestions.length - suggestionIndex <= 5 &&
+      !isPending &&
+      (!res || res.data.length !== 0)
+    ) {
       refetch();
     }
-  }, [isPending, refetch, suggestionIndex, suggestions.length, topCard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suggestionIndex]);
 
   const suggested = suggestions[suggestionIndex];
   const nextSuggestion = suggestions[suggestionIndex + 1];
 
   const onCardLeftScreen = (dir: 'right' | 'left') => {
     setSuggestionIndex((p) => p + 1);
+    const decision = dir === 'right' ? 'accept' : 'decline';
+
+    if (!suggested.addressed) {
+      suggested.addressed = true;
+      callDecidePotentialMatch({ suggestedUserId: suggested.id, decision });
+    }
   };
 
   if (!user || !user.active) {
