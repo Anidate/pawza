@@ -192,6 +192,7 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
                       onChange={(newValue: string | null) => {
                         setDob(newValue);
                       }}
+                      disableFuture
                     />
                   </DemoContainer>
                 </LocalizationProvider>

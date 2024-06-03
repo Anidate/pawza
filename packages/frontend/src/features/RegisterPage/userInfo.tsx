@@ -27,20 +27,66 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [dob, setDob] = React.useState<string | null>(null);
+  const [emailValidation, setEmailValidation] = React.useState(true);
+  const [passwordValidation, setPasswordValidation] = React.useState(true);
+  const [fNameFill, setFNameFill] = React.useState(false);
 
+  const [lNameFill, setLNameFill] = React.useState(false);
+  const [tmpFirstName, settmpFirstName] = React.useState('');
+
+  const [tmpLastName, settmpLastName] = React.useState('');
+  const [test1, setTest1] = React.useState(false);
+  const [test2, setTest2] = React.useState(false);
+  const [test3, setTest3] = React.useState(false);
+
+  const checkEmailValidation = (val: string) => {
+    // don't remember from where i copied this code, but this works.
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (re.test(val.toLowerCase())) {
+      setEmailValidation(true);
+      setEmail(val);
+    } else {
+      setEmailValidation(false);
+    }
+  };
+
+  const checkPasswordValidation = (val: string) => {
+    // Minimum eight characters, at least one letter and one number:
+    const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const t1 = /.[A-Za-z].|[A-Za-z].|.[A-Za-z]|[A-Za-z]/;
+    const t2 = /.[0-9].|[0-9].|.[0-9]|[0-9]$/;
+    const t3 = /^.{8,}\.$/;
+
+    setTest1(!t1.test(val));
+    setTest2(!t2.test(val));
+    setTest3(!t3.test(val));
+
+    if (re.test(val)) {
+      setPasswordValidation(true);
+      setPassword(val);
+    } else {
+      setPasswordValidation(false);
+    }
+  };
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     switch (event.target.id) {
       case 'firstName':
+        setFNameFill(true);
+        settmpFirstName(event.target.value);
         setFirstName(event.target.value);
         break;
       case 'lastName':
+        setLNameFill(true);
+        settmpLastName(event.target.value);
         setLastName(event.target.value);
         break;
       case 'email':
-        setEmail(event.target.value);
+        checkEmailValidation(event.target.value);
         break;
       case 'password':
-        setPassword(event.target.value);
+        checkPasswordValidation(event.target.value);
         break;
       default:
         break;
@@ -90,50 +136,109 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
         <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                onChange={handleFormChange}
-              />
+              {(!fNameFill && tmpFirstName === '') || (fNameFill && tmpFirstName !== '') ? (
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  onChange={handleFormChange}
+                />
+              ) : (
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  onChange={handleFormChange}
+                  error
+                />
+              )}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
-                onChange={handleFormChange}
-              />
+              {(!lNameFill && tmpLastName === '') || (lNameFill && tmpLastName !== '') ? (
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  onChange={handleFormChange}
+                />
+              ) : (
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  onChange={handleFormChange}
+                  error
+                />
+              )}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                onChange={handleFormChange}
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
+              {emailValidation === true ? (
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  onChange={handleFormChange}
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  type="email"
+                />
+              ) : (
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  onChange={handleFormChange}
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  type="email"
+                  error
+                />
+              )}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                onChange={handleFormChange}
-              />
+              {passwordValidation ? (
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  onChange={handleFormChange}
+                />
+              ) : (
+                <>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                    onChange={handleFormChange}
+                    error
+                  />
+                  {test1 && <p>Please enter at least 1 character ( a-z / A-Z )</p>}
+                  {test2 && <p>Please enter at least 1 number ( 0-9 )</p>}
+                  {test3 && <p>Password length must be at least 8 (not counting special signs)</p>}
+                </>
+              )}
             </Grid>
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -142,6 +247,7 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
                     label="Birth Date"
                     sx={{ width: '100%' }}
                     onChange={(newValue: string | null) => setDob(newValue || null)}
+                    disableFuture
                   />
                 </DemoContainer>
               </LocalizationProvider>
