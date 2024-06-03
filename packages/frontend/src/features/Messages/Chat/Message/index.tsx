@@ -1,5 +1,6 @@
-import ChatContainer from './ChatContainer';
 import './index.css';
+
+import ChatContainer from './ChatMenu';
 
 function ChatApp() {
   return <ChatContainer />;

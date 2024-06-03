@@ -1,9 +1,10 @@
 .main-container {
   background-color: #f4efef;
-  width: 90vw;
+  /* width: 90vw; */
   text-align: left;
   display: flex;
   border-radius: 20px;
+  flex-direction: column;
 }
 
 .sidebar-container {
@@ -17,15 +18,6 @@
   margin: 1rem;
 }
 
-.sb-search {
-  background-color: white;
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  margin: 1rem;
-  display: flex;
-  align-items: center;
-}
-
 .search-box {
   outline-width: 0;
   border: none;
@@ -36,27 +28,28 @@
 .sb-chats {
   background-color: white;
   border-radius: 20px;
-  padding: 0.5rem 1rem;
+  padding-left: 0.5rem;
+  padding-right: 6rem;
   margin: 1rem;
   flex: 1;
 }
 
 .chat-title {
   grid-area: 1/2/2/4;
-  font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   color: rgb(0, 0, 0, 0, 0.54);
 }
 
 .chat-timeStamp {
   justify-self: flex-end;
-  font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 0.75rem;
   color: rgb(0, 0, 0, 0, 0.54);
 }
 
 .chat-lastMessage {
-  font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 0.75rem;
 }
 
@@ -67,12 +60,8 @@
 }
 
 .messages-container {
-  /* background-color: rgba(0, 0, 0, 0.05); */
   background-color: #fbfbfb;
   flex: 1;
-}
-
-.text-input-area {
 }
 
 .chat-area-header {
@@ -100,7 +89,7 @@
   justify-content: center;
   align-items: center;
   background-color: #d9d9d9;
-  font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 2rem;
   font-weight: bolder;
   color: white;
@@ -137,4 +126,11 @@
   margin-left: 0.5rem;
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
+}
+
+.sb-chats .chats-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-left: 0.5rem;
+  color: #333;
 }

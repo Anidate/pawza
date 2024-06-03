@@ -1,4 +1,4 @@
-function ChatsItem({ props }){
+function ChatsItem({ props }) {
   return (
     <div className="chat-container">
       <div className="chat-icon">{props.name[0]}</div>
@@ -8,7 +8,5 @@ function ChatsItem({ props }){
     </div>
   );
 }
-
-
 
 export default ChatsItem;
