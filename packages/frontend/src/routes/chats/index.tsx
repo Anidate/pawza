@@ -7,6 +7,6 @@ function Index() {
   return <ChatApp />;
 }
 
-export const Route = createFileRoute('/chat/')({
+export const Route = createFileRoute('/chats/')({
   component: AuthenticatedRoute(Index),
 });
