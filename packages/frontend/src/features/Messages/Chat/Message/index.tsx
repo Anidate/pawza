@@ -1,9 +1,9 @@
 import './index.css';
 
-import ChatContainer from './ChatMenu';
+import ChatMenu from './ChatMenu';
 
 function ChatApp() {
-  return <ChatContainer />;
+  return <ChatMenu />;
 }
 
 export default ChatApp;
