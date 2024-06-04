@@ -37,3 +37,19 @@ export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | stri
 
   return usersToSuggest;
 };
+
+export const acceptPotentialMatch = async (user: mongoose.Types.ObjectId, suggestedUser: mongoose.Types.ObjectId) => {
+  await PotentialMatchModel.updateOne(
+    { user, suggestedUser },
+    { $set: { status: PotentialMatchStatus.Accepted } },
+    { upsert: true },
+  );
+};
+
+export const declinePotentialMatch = async (user: mongoose.Types.ObjectId, suggestedUser: mongoose.Types.ObjectId) => {
+  await PotentialMatchModel.updateOne(
+    { user, suggestedUser },
+    { $set: { status: PotentialMatchStatus.Declined } },
+    { upsert: true },
+  );
+};
