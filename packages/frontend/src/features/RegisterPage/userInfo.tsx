@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -100,18 +99,15 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
     DOB: new Date(),
   };
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (firstName !== '' && lastName !== '' && email !== '' && password !== '' && dob !== null) {
-        changeState(true);
-        user1.firstNameField = firstName;
-        user1.lastNameField = lastName;
-        user1.emailField = email;
-        user1.passwordField = password;
-        user1.DOB = new Date(dob);
-        changeUserAttribute(user1);
-      } else changeState(false);
-    }, 1000);
-    return () => clearTimeout(timeout);
+    if (firstName !== '' && lastName !== '' && email !== '' && password !== '' && dob !== null) {
+      changeState(true);
+      user1.firstNameField = firstName;
+      user1.lastNameField = lastName;
+      user1.emailField = email;
+      user1.passwordField = password;
+      user1.DOB = new Date(dob);
+      changeUserAttribute(user1);
+    } else changeState(false);
   }, [firstName, lastName, email, password, dob]);
 
   function Copyright(props: any) {
@@ -124,7 +120,6 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -255,7 +250,7 @@ export default function UserInfo({ changeUserAttribute, user, changeState, fillS
           </Grid>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="signup" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
