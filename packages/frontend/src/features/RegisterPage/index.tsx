@@ -6,8 +6,8 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-import Terms from './ TermsAndConditions.tsx';
 import PetDetails from './PetDetails.tsx';
+import Terms from './TermsAndConditions.tsx';
 import UserInfo from './UserInfo.tsx';
 
 const steps = ['User Details', 'Pet Details', 'Terms&Conditions'];
