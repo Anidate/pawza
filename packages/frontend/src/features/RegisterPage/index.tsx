@@ -6,9 +6,9 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-import PetDetails from './petDetails';
-import Terms from './terms&Conditions';
-import UserInfo from './userInfo';
+import Terms from './ TermsAndConditions.tsx';
+import PetDetails from './PetDetails.tsx';
+import UserInfo from './UserInfo.tsx';
 
 const steps = ['User Details', 'Pet Details', 'Terms&Conditions'];
 type SetCheckState = (x: boolean) => boolean;
@@ -31,7 +31,7 @@ export interface UserFields {
   DOB: Date;
 }
 
-export default function HorizontalLinearStepper() {
+export default function TitleStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
   const [petFill, setPetFill] = React.useState(false);
@@ -66,15 +66,11 @@ export default function HorizontalLinearStepper() {
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: { optional?: React.ReactNode } = {};
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>

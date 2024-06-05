@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
 import Button from '@mui/material/Button';
-import Dialog, { type DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -19,12 +19,10 @@ interface TermsProps {
 
 export default function Terms({ checkChange, checkState }: TermsProps) {
   const [open, setOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
   const [checked, setChecked] = useState(checkState);
 
-  const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
+  const handleClickOpen = () => {
     setOpen(true);
-    setScroll(scrollType);
   };
 
   const handleClose = () => {
@@ -51,16 +49,16 @@ export default function Terms({ checkChange, checkState }: TermsProps) {
 
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen('paper')}>Read terms and conditions</Button>
+      <Button onClick={handleClickOpen}>Read terms and conditions</Button>
       <Dialog
         open={open}
         onClose={handleClose}
-        scroll={scroll}
+        scroll={'paper'}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
         <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'}>
+        <DialogContent dividers={true}>
           <DialogContentText id="scroll-dialog-description" ref={descriptionElementRef} tabIndex={-1}>
             {[...new Array(50)]
               .map(
@@ -74,28 +72,16 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
           <div ref={ref}></div>
         </DialogContent>
         <DialogActions>
-          {inView ? (
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" checked={checked} onChange={handleChange} />}
-              label="I agree to the terms & conditions"
-              sx={{ paddingRight: 23 }}
-            />
-          ) : (
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" checked={checked} onChange={handleChange} />}
-              label="I agree to the terms & conditions"
-              sx={{ paddingRight: 23 }}
-              disabled
-            />
-          )}
+          <FormControlLabel
+            control={<Checkbox value="allowExtraEmails" color="primary" checked={checked} onChange={handleChange} />}
+            label="I agree to the terms & conditions"
+            sx={{ paddingRight: 23 }}
+            disabled={!inView}
+          />
 
-          {checked ? (
-            <Button onClick={handleClose}>Accept</Button>
-          ) : (
-            <Button onClick={handleClose} disabled>
-              Accept
-            </Button>
-          )}
+          <Button onClick={handleClose} disabled={!checked}>
+            Accept
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
