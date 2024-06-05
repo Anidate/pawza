@@ -13,5 +13,5 @@ function Index() {
     return <Navigate to="/home" replace />;
   }
 
-  return <Navigate to="/login" replace />;
+  return <Navigate to="/signup" replace />;
 }

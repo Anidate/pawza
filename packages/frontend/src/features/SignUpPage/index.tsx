@@ -36,10 +36,7 @@ export default function SignUpPage() {
   const success = useStateMachineInput(rive, 'StateMachine1', 'success');
 
   const animationHandle = () => {
-    handsUp.value == true ? (handsUp.value = false) : console.log('test');
     check.value = false;
-    console.log(check);
-    console.log(look);
   };
   const [email, setEmail] = useState('');
 
@@ -101,6 +98,7 @@ export default function SignUpPage() {
               autoComplete="email"
               value={email}
               onChange={(e) => checkHandle(e)}
+              onClick={() => (handsUp.value = false)}
             />
             <TextField
               margin="normal"
