@@ -1,36 +1,61 @@
-import './styles.css';
-
 import { Box } from '@mui/material';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
+import { fetchChats } from '../../../../api/chats';
 import ChatsItem from './ChatsItem';
 
 type Chat = {
-  name: string;
-  lastMessage: string;
-  timeStamp: string;
+  _id: string;
+  users: Array<{
+    firstName: string;
+    lastName: string;
+    email: string;
+  }>;
+  latestMessage: {
+    content: string;
+    timestamp: string;
+  };
 };
 
-type Message = string;
-
 function ChatMenu() {
-  const [chats, setChats] = useState<Chat[]>([
-    { name: 'Test#1', lastMessage: 'last Message #1', timeStamp: 'today' },
-    { name: 'Test#2', lastMessage: 'last Message #2', timeStamp: 'today' },
-    { name: 'Test#3', lastMessage: 'last Message #3', timeStamp: 'today' },
-  ]);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const {
+    data: chats = [],
+    isLoading,
+    error,
+  } = useQuery<Chat[]>({
+    queryKey: ['chats'],
+    queryFn: async () => {
+      console.log('Fetching chats...');
+      const response = await fetchChats();
+      console.log('Fetched chats response:', response);
+      return response.data;
+    },
+  });
 
-  const handleSendMessage = (message: Message) => {
-    setMessages([...messages, message]);
-  };
+  if (isLoading) {
+    console.log('Loading chats...');
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    console.error('Error loading chats:', error);
+    return <div>Error loading chats</div>;
+  }
+
+  console.log('Chats data:', chats);
 
   return (
     <Box className="ChatApp main-container">
       <div className="sb-chats">
-        <h2 className="chats-title">chats</h2>
-        {chats.map((chat, index) => (
-          <ChatsItem key={index} props={chat} />
+        <h2 className="chats-title">Chats</h2>
+        {chats.map((chat) => (
+          <ChatsItem
+            key={chat._id}
+            props={{
+              name: `${chat.users[0].firstName} ${chat.users[0].lastName}`,
+              lastMessage: chat.latestMessage ? chat.latestMessage.content : 'No messages yet',
+              timeStamp: chat.latestMessage ? new Date(chat.latestMessage.timestamp).toLocaleString() : '',
+            }}
+          />
         ))}
       </div>
     </Box>
