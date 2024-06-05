@@ -5,15 +5,23 @@ import { useState } from 'react';
 
 import ChatsItem from './ChatsItem';
 
+type Chat = {
+  name: string;
+  lastMessage: string;
+  timeStamp: string;
+};
+
+type Message = string;
+
 function ChatMenu() {
-  const [chats, setChats] = useState([
+  const [chats, setChats] = useState<Chat[]>([
     { name: 'Test#1', lastMessage: 'last Message #1', timeStamp: 'today' },
     { name: 'Test#2', lastMessage: 'last Message #2', timeStamp: 'today' },
     { name: 'Test#3', lastMessage: 'last Message #3', timeStamp: 'today' },
   ]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleSendMessage = (message) => {
+  const handleSendMessage = (message: Message) => {
     setMessages([...messages, message]);
   };
 
