@@ -3,6 +3,7 @@ import { type FilterQuery } from 'mongoose';
 
 import { type PotentialMatchDoc, PotentialMatchModel, PotentialMatchStatus } from '../models/potential-match.js';
 import { type UserDoc, UserModel, UserPurpose } from '../models/user.js';
+import { createChat } from './chats.js'; // Import the createChat method
 
 export interface PotentialMatchPopulated extends Omit<PotentialMatchDoc, 'user'> {
   user: UserDoc;
@@ -17,14 +18,13 @@ export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | stri
   });
 
   const userIdsToIgnore = matchesToIgnore.map((potentialMatch) => potentialMatch.suggestedUser);
-  userIdsToIgnore.push(user._id); // don't suggest my self
+  userIdsToIgnore.push(user._id); // don't suggest myself
   const userChoices: FilterQuery<UserDoc> = {
     _id: { $nin: userIdsToIgnore },
-    gender: { $in: user.genderPreference }, // checking that the suggested user gender matches my preferences
-    genderPreference: user.gender, // checking that my gender is at the users preferences
+    gender: { $in: user.genderPreference },
+    genderPreference: user.gender,
   };
 
-  // if my purpose and the other user purpose match or atleast one is all
   if (user.purpose !== UserPurpose.All) {
     userChoices.purpose = { $in: [user.purpose, UserPurpose.All] };
   }
@@ -44,6 +44,17 @@ export const acceptPotentialMatch = async (user: mongoose.Types.ObjectId, sugges
     { $set: { status: PotentialMatchStatus.Accepted } },
     { upsert: true },
   );
+
+  // Check for mutual match
+  const reverseMatch = await PotentialMatchModel.findOne({
+    user: suggestedUser,
+    suggestedUser: user,
+    status: PotentialMatchStatus.Accepted,
+  });
+
+  if (reverseMatch) {
+    await createChat(user, suggestedUser);
+  }
 };
 
 export const declinePotentialMatch = async (user: mongoose.Types.ObjectId, suggestedUser: mongoose.Types.ObjectId) => {
