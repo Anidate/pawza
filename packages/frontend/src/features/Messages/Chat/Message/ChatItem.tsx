@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Box, Typography, Card, CardContent, Avatar } from '@mui/material';
+import { Typography, Card, CardContent, Avatar } from '@mui/material';
 
 type Props = {
   name: string;
