@@ -1,5 +1,9 @@
+// ChatMenu.js
+
+import './styles.css';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 
 import { fetchChats } from '../../../../api/chats';
 import ChatsItem from './ChatsItem';
@@ -51,9 +55,10 @@ function ChatMenu() {
           <ChatsItem
             key={chat._id}
             props={{
-              name: `${chat.users[0].firstName} ${chat.users[0].lastName}`,
+              name: `${chat.users[1].firstName} ${chat.users[1].lastName}`,
               lastMessage: chat.latestMessage ? chat.latestMessage.content : 'No messages yet',
               timeStamp: chat.latestMessage ? new Date(chat.latestMessage.timestamp).toLocaleString() : '',
+              to: `/chats/chat/${chat._id}`,
             }}
           />
         ))}
