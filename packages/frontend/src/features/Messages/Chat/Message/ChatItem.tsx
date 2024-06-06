@@ -8,7 +8,7 @@ type Props = {
   to: string;
 };
 
-function ChatsItem({ props }: { props: Props }) {
+function ChatItem({ props }: { props: Props }) {
   return (
     <Link to={props.to} className="chat-container">
       <div className="chat-icon">{props.name[0]}</div>
@@ -19,4 +19,4 @@ function ChatsItem({ props }: { props: Props }) {
   );
 }
 
-export default ChatsItem;
+export default ChatItem;

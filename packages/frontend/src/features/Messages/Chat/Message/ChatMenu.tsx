@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchChats } from '../../../../api/chats';
-import ChatsItem from './ChatsItem';
+import ChatItem from './ChatItem';
 
 type Chat = {
   _id: string;
@@ -27,6 +27,8 @@ function ChatMenu() {
     queryKey: ['chats'],
     queryFn: async () => {
       const response = await fetchChats();
+      console.log(response.data);
+      
       return response.data;
     },
   });
@@ -44,7 +46,7 @@ function ChatMenu() {
       <div className="sb-chats">
         <h2 className="chats-title">Chats</h2>
         {chats.map((chat) => (
-          <ChatsItem
+          <ChatItem
             key={chat._id}
             props={{
               name: `${chat.users[1].firstName} ${chat.users[1].lastName}`,
