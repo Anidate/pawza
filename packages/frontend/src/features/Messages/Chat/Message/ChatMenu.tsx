@@ -1,7 +1,5 @@
-import './styles.css';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-
 import { fetchChats } from '../../../../api/chats';
 import ChatItem from './ChatItem';
 
@@ -28,7 +26,6 @@ function ChatMenu() {
     queryFn: async () => {
       const response = await fetchChats();
       console.log(response.data);
-      
       return response.data;
     },
   });
@@ -42,9 +39,11 @@ function ChatMenu() {
   }
 
   return (
-    <Box className="ChatApp main-container">
-      <div className="sb-chats">
-        <h2 className="chats-title">Chats</h2>
+    <Box sx={{ textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
+      <Box sx={{ width: '100%', maxWidth: '600px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '1rem' }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center', color: '#333' }}>
+          Chats
+        </Typography>
         {chats.map((chat) => (
           <ChatItem
             key={chat._id}
@@ -56,7 +55,7 @@ function ChatMenu() {
             }}
           />
         ))}
-      </div>
+      </Box>
     </Box>
   );
 }

@@ -1,7 +1,8 @@
+import type mongoose from 'mongoose';
 import { ChatModel } from '../models/chat.js';
 import { PotentialMatchModel } from '../models/potential-match.js';
 
-export const getMatchedChats = async (userId) => {
+export const getMatchedChats = async (userId: mongoose.Types.ObjectId) => {
   // Find all matches where the user is either the user or suggestedUser
   const userMatches = await PotentialMatchModel.find({
     user: userId,
@@ -39,7 +40,7 @@ export const getMatchedChats = async (userId) => {
   return chats;
 };
 
-export const createChat = async (userId1, userId2) => {
+export const createChat = async (userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId) => {
   const newChat = new ChatModel({
     users: [userId1, userId2],
   });

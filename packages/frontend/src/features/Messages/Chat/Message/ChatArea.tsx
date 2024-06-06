@@ -58,17 +58,28 @@ function ChatArea({ chatId }: { chatId: string }) {
   }
 
   return (
-    <Box className="chat-area-container" sx={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#F5F5F5' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 64px)',
+        padding: '2rem',
+        boxSizing: 'border-box',
+        alignItems: 'center',
+      }}
+    >
       <Box
-        className="messages-container"
         sx={{
+          width: '100%',
+          maxWidth: '600px',
           flexGrow: 1,
-          overflowY: 'auto',
           padding: '1rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
-          alignItems: 'center',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         }}
       >
         {messages.map((message) => (
@@ -80,7 +91,22 @@ function ChatArea({ chatId }: { chatId: string }) {
           />
         ))}
       </Box>
-      <Box component="form" className="text-input-area" onSubmit={handleSendMessage} display="flex" gap="1rem" sx={{ padding: '1rem', backgroundColor: '#FFF', boxShadow: '0 -1px 3px rgba(0,0,0,0.1)', borderTop: '1px solid #E0E0E0' }}>
+      <Box
+        component="form"
+        onSubmit={handleSendMessage}
+        display="flex"
+        gap="1rem"
+        sx={{
+          width: '100%',
+          maxWidth: '600px',
+          padding: '1rem',
+          backgroundColor: '#fff',
+          boxShadow: '0 -1px 3px rgba(0, 0, 0, 0.1)',
+          borderTop: '1px solid #E0E0E0',
+          borderRadius: '12px',
+          marginTop: '1rem',
+        }}
+      >
         <TextField
           variant="outlined"
           sx={{
