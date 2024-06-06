@@ -15,7 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as HomeIndexImport } from './routes/home/index'
 import { Route as ChatsIndexImport } from './routes/chats/index'
-import { Route as ChatsChatIndexImport } from './routes/chats/chat/index'
+import { Route as ChatsChatIdIndexImport } from './routes/chats/$chatId/index'
 
 // Create Virtual Routes
 
@@ -50,8 +50,8 @@ const ChatsIndexRoute = ChatsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ChatsChatIndexRoute = ChatsChatIndexImport.update({
-  path: '/chats/chat/',
+const ChatsChatIdIndexRoute = ChatsChatIdIndexImport.update({
+  path: '/chats/$chatId/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -94,11 +94,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/chats/chat/': {
-      id: '/chats/chat/'
-      path: '/chats/chat'
-      fullPath: '/chats/chat'
-      preLoaderRoute: typeof ChatsChatIndexImport
+    '/chats/$chatId/': {
+      id: '/chats/$chatId/'
+      path: '/chats/$chatId'
+      fullPath: '/chats/$chatId'
+      preLoaderRoute: typeof ChatsChatIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -112,7 +112,7 @@ export const routeTree = rootRoute.addChildren({
   HomeIndexRoute,
   LoginIndexLazyRoute,
   SignupIndexLazyRoute,
-  ChatsChatIndexRoute,
+  ChatsChatIdIndexRoute,
 })
 
 /* prettier-ignore-end */

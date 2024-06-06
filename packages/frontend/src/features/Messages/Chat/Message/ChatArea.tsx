@@ -1,15 +1,8 @@
-// ChatArea.tsx
-
 import SendIcon from '@mui/icons-material/Send';
 import { Box, IconButton, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchMessages, sendMessage } from '../../../../api/chat-messages';
-
-interface Chat {
-  name: string;
-  timeStamp: string;
-}
 
 interface Message {
   _id: string;
@@ -17,20 +10,19 @@ interface Message {
   timestamp: string;
 }
 
-interface ChatAreaProps {
-  chat: Chat;
-  chatId: string;
-}
-
-function ChatArea({ chat, chatId }: ChatAreaProps) {
+function ChatArea({ chatId }: { chatId: string }) {
   const queryClient = useQueryClient();
   const [newMessage, setNewMessage] = useState('');
 
   // Fetch messages using useQuery
-  const { data: messages = [], isLoading, error } = useQuery(['messages', chatId], () => fetchMessages(chatId));
+  const { data: messages = [], isLoading, error } = useQuery<Message[]>({
+    queryKey: ['messages', chatId],
+    queryFn: () => fetchMessages(chatId),
+  });
 
   // Mutation for sending a message
-  const mutation = useMutation(({ chatId, content }: { chatId: string; content: string }) => sendMessage(chatId, content), {
+  const mutation = useMutation({
+    mutationFn: ({ chatId, content }: { chatId: string; content: string }) => sendMessage(chatId, content),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(['messages', chatId]);
@@ -62,16 +54,9 @@ function ChatArea({ chat, chatId }: ChatAreaProps) {
 
   return (
     <Box className="chat-area-container">
-      <Box className="chat-area-header">
-        <Box className="chat-icon">{chat.name[0]}</Box>
-        <Box className="chat-info">
-          <Box className="chat-title">{chat.name}</Box>
-          <Box className="chat-time-stamp">{chat.timeStamp}</Box>
-        </Box>
-      </Box>
       <Box className="messages-container">
-        {messages.map((message: Message, index: number) => (
-          <Box key={index} className="message">
+        {messages.map((message) => (
+          <Box key={message._id} className="message">
             {message.content}
           </Box>
         ))}
@@ -88,7 +73,7 @@ function ChatArea({ chat, chatId }: ChatAreaProps) {
           InputProps={{
             style: { borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem' },
             endAdornment: (
-              <IconButton onClick={handleSendMessage}>
+              <IconButton type="submit">
                 <SendIcon />
               </IconButton>
             ),

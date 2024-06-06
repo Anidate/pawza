@@ -1,5 +1,3 @@
-// chatApi.ts
-
 import { apiClient } from './base';
 
 // Define the response interface for chats and messages
@@ -16,9 +14,11 @@ interface Message {
 }
 
 // Fetch messages for a specific chat
-export const fetchMessages = (chatId: string) => apiClient.get<Message[]>(`/messages/${chatId}`);
+export const fetchMessages = (chatId: string) => {
+  return apiClient.get<Message[]>(`/messages/${chatId}`).then(response => response.data);
+};
 
 // Send a new message
 export const sendMessage = (chatId: string, content: string) => {
-  return apiClient.post<Message>('/messages', { chatId, content });
+  return apiClient.post<Message>('/messages', { chatId, content }).then(response => response.data);
 };
