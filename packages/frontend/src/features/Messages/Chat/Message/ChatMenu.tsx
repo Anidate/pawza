@@ -1,9 +1,6 @@
-// ChatMenu.js
-
 import './styles.css';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 
 import { fetchChats } from '../../../../api/chats';
 import ChatsItem from './ChatsItem';
@@ -29,23 +26,18 @@ function ChatMenu() {
   } = useQuery<Chat[]>({
     queryKey: ['chats'],
     queryFn: async () => {
-      console.log('Fetching chats...');
       const response = await fetchChats();
-      console.log('Fetched chats response:', response);
       return response.data;
     },
   });
 
   if (isLoading) {
-    console.log('Loading chats...');
     return <div>Loading...</div>;
   }
   if (error) {
     console.error('Error loading chats:', error);
     return <div>Error loading chats</div>;
   }
-
-  console.log('Chats data:', chats);
 
   return (
     <Box className="ChatApp main-container">
