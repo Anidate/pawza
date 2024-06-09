@@ -12,13 +12,13 @@ function ChatArea({ chatId }: { chatId: string }) {
   const [newMessage, setNewMessage] = useState('');
   const { user } = useAuth();
   
-  // Fetch messages using useQuery
+  // Fetch messages using useQuery with polling every 2 seconds
   const { data: messages = [], isLoading, error } = useQuery<Message[]>({
     queryKey: ['chats', chatId, 'messages'],
     queryFn: () => fetchMessages(chatId),
+    refetchInterval: 2000,
   });
-console.log(messages);
-
+  
   // Mutation for sending a message
   const mutation = useMutation({
     mutationFn: ({ content }: { content: string }) => sendMessage(chatId, content),
@@ -71,7 +71,7 @@ console.log(messages);
       >
         {messages.map((message) => (
           <MessageItem
-            key={message._id}
+            key={message.id}
             content={message.content}
             timestamp={new Date(message.timestamp)}
             isCurrentUser={message.senderId === user!.id}
