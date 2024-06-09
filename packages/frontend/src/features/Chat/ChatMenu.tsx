@@ -1,20 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { fetchChats } from '../../../../api/chats';
-import ChatItem from './ChatItem';
 
-type Chat = {
-  _id: string;
-  users: Array<{
-    firstName: string;
-    lastName: string;
-    email: string;
-  }>;
-  latestMessage: {
-    content: string;
-    timestamp: string;
-  };
-};
+import { type Chat, fetchChats } from '../../api/chats';
+import ChatItem from './ChatItem';
 
 function ChatMenu() {
   const {
@@ -23,18 +11,15 @@ function ChatMenu() {
     error,
   } = useQuery<Chat[]>({
     queryKey: ['chats'],
-    queryFn: async () => {
-      const response = await fetchChats();
-      console.log(response.data);
-      return response.data;
-    },
+    queryFn: fetchChats,
   });
+
+  console.log(chats);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (error) {
-    console.error('Error loading chats:', error);
     return <div>Error loading chats</div>;
   }
 
@@ -47,12 +32,9 @@ function ChatMenu() {
         {chats.map((chat) => (
           <ChatItem
             key={chat._id}
-            props={{
-              name: `${chat.users[1].firstName} ${chat.users[1].lastName}`,
-              lastMessage: chat.latestMessage ? chat.latestMessage.content : 'No messages yet',
-              timeStamp: chat.latestMessage ? new Date(chat.latestMessage.timestamp).toLocaleString() : '',
-              to: `/chats/${chat._id}`,
-            }}
+            name={`${chat.matchedUser.firstName} ${chat.matchedUser.lastName}`}
+            lastMessage={chat.latestMessage || 'No messages yet'}
+            to={`/chats/${chat._id}`}
           />
         ))}
       </Box>

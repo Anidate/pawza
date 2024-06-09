@@ -3,7 +3,6 @@ import { Router } from 'express';
 import { auth } from '../middlewares/auth.js';
 import { authRouter } from './auth.js';
 import { chatsRouter } from './chats.js';
-import { messagesRouter } from './messages.js';
 import { potentialMatcherRouter } from './potential-matches.js';
 import { usersRouter } from './users.js';
 
@@ -13,6 +12,5 @@ indexRouter.use('/auth', authRouter);
 indexRouter.use('/users', auth(), usersRouter);
 indexRouter.use('/potential-matches', auth(), potentialMatcherRouter);
 indexRouter.use('/chats', auth(), chatsRouter);
-indexRouter.use('/messages', auth(), messagesRouter);
 
 export { indexRouter };

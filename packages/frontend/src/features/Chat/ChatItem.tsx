@@ -1,18 +1,17 @@
+import { Avatar, Card, CardContent, Typography } from '@mui/material';
 import { Link } from '@tanstack/react-router';
-import { Typography, Card, CardContent, Avatar } from '@mui/material';
 
-type Props = {
+export type ChatItemProps = {
   name: string;
   lastMessage: string;
-  timeStamp: string;
   to: string;
 };
 
-function ChatItem({ props }: { props: Props }) {
+function ChatItem({ name, lastMessage, to }: ChatItemProps) {
   return (
     <Card
       component={Link}
-      to={props.to}
+      to={to}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -30,17 +29,14 @@ function ChatItem({ props }: { props: Props }) {
       }}
     >
       <Avatar sx={{ bgcolor: '#3f51b5', marginRight: '1rem', fontSize: '1.25rem' }}>
-        {props.name[0]}
+        {name[0]}
       </Avatar>
       <CardContent sx={{ flex: '1', padding: '0.5rem' }}>
         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-          {props.name}
+          {name}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ marginTop: '0.5rem' }}>
-          {props.lastMessage}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', marginTop: '0.5rem', textAlign: 'right' }}>
-          {props.timeStamp}
+          {lastMessage}
         </Typography>
       </CardContent>
     </Card>

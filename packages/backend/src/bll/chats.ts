@@ -1,49 +1,49 @@
 import type mongoose from 'mongoose';
+
+import { type ChatDto, toChatDto } from '../api/dtos/chat.js';
+import { toMessageDto } from '../api/dtos/message.js';
 import { ChatModel } from '../models/chat.js';
-import { PotentialMatchModel } from '../models/potential-match.js';
+import { MessageModel } from '../models/message.js';
 
-export const getMatchedChats = async (userId: mongoose.Types.ObjectId) => {
-  // Find all matches where the user is either the user or suggestedUser
-  const userMatches = await PotentialMatchModel.find({
-    user: userId,
-    status: 'accepted',
-  })
-    .populate('user', 'firstName lastName email')
-    .populate('suggestedUser', 'firstName lastName email');
-
-  const suggestedMatches = await PotentialMatchModel.find({
-    suggestedUser: userId,
-    status: 'accepted',
-  })
-    .populate('user', 'firstName lastName email')
-    .populate('suggestedUser', 'firstName lastName email');
-
-  // Filter mutual matches
-  const mutualMatches = userMatches.filter((userMatch) =>
-    suggestedMatches.some(
-      (suggestedMatch) =>
-        suggestedMatch.user._id.equals(userMatch.suggestedUser._id) &&
-        suggestedMatch.suggestedUser._id.equals(userMatch.user._id),
-    ),
-  );
-
-  // Collect mutual user IDs
-  const mutualUserIds = mutualMatches.map((match) => match.suggestedUser._id);
-
-  // Find all chats where the user is part of the chat users
+// Function to get all matched chats for a user
+export const getMatchedChats = async (userId: mongoose.Types.ObjectId): Promise<ChatDto[]> => {
   const chats = await ChatModel.find({
-    users: { $in: [userId, ...mutualUserIds] },
+    users: userId,
   })
-    .populate('users', 'firstName lastName email')
-    .populate('latestMessage');
+    .populate('users', 'firstName lastName email');
 
-  return chats;
+  // Convert chats to DTOs
+  return chats.map(chat => toChatDto(chat, userId));
 };
 
+// Function to create a new chat
 export const createChat = async (userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId) => {
   const newChat = new ChatModel({
     users: [userId1, userId2],
   });
 
   await newChat.save();
+};
+
+// Function to create a new message
+export const createMessage = async (content: string, chatId: mongoose.Types.ObjectId, senderId: mongoose.Types.ObjectId) => {
+  const newMessage = new MessageModel({
+    content,
+    sender: senderId,
+    chatId,
+  });
+
+  await newMessage.save();
+  await ChatModel.updateOne({ _id: chatId }, { latestMessage: content });
+
+  return newMessage;
+};
+
+// Function to get all messages for a chat
+export const getMessagesForChat = async (chatId: mongoose.Types.ObjectId) => {
+  const messages = await MessageModel.find({ chatId })
+    .sort({ createdAt: 1 })
+    .populate('sender', 'firstName lastName');
+
+  return messages.map(toMessageDto);
 };

@@ -14,14 +14,14 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as HomeIndexImport } from './routes/home/index'
-import { Route as ChatsIndexImport } from './routes/chats/index'
-import { Route as ChatsChatIdIndexImport } from './routes/chats/$chatId/index'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
+const ChatsIndexLazyImport = createFileRoute('/chats/')()
+const ChatsChatIdIndexLazyImport = createFileRoute('/chats/$chatId/')()
 
 // Create/Update Routes
 
@@ -40,20 +40,22 @@ const LoginIndexLazyRoute = LoginIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
 
+const ChatsIndexLazyRoute = ChatsIndexLazyImport.update({
+  path: '/chats/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/chats/index.lazy').then((d) => d.Route))
+
 const HomeIndexRoute = HomeIndexImport.update({
   path: '/home/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ChatsIndexRoute = ChatsIndexImport.update({
-  path: '/chats/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ChatsChatIdIndexRoute = ChatsChatIdIndexImport.update({
+const ChatsChatIdIndexLazyRoute = ChatsChatIdIndexLazyImport.update({
   path: '/chats/$chatId/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/chats/$chatId/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -66,18 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/chats/': {
-      id: '/chats/'
-      path: '/chats'
-      fullPath: '/chats'
-      preLoaderRoute: typeof ChatsIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/home/': {
       id: '/home/'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/chats/': {
+      id: '/chats/'
+      path: '/chats'
+      fullPath: '/chats'
+      preLoaderRoute: typeof ChatsIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/login/': {
@@ -98,7 +100,7 @@ declare module '@tanstack/react-router' {
       id: '/chats/$chatId/'
       path: '/chats/$chatId'
       fullPath: '/chats/$chatId'
-      preLoaderRoute: typeof ChatsChatIdIndexImport
+      preLoaderRoute: typeof ChatsChatIdIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -108,11 +110,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  ChatsIndexRoute,
   HomeIndexRoute,
+  ChatsIndexLazyRoute,
   LoginIndexLazyRoute,
   SignupIndexLazyRoute,
-  ChatsChatIdIndexRoute,
+  ChatsChatIdIndexLazyRoute,
 })
 
 /* prettier-ignore-end */

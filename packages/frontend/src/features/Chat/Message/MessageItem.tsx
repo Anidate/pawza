@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 
-interface MessageItemProps {
+export interface MessageItemProps {
   content: string;
-  timestamp: string;
+  timestamp: Date;
   isCurrentUser: boolean;
 }
 
@@ -10,7 +10,6 @@ const MessageItem: React.FC<MessageItemProps> = ({ content, timestamp, isCurrent
   <Box
     sx={{
       alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
-
       maxWidth: '60%',
       padding: '0.5rem',
       borderStartStartRadius: '1rem',
@@ -30,7 +29,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ content, timestamp, isCurrent
       variant="caption"
       sx={{ display: 'block', textAlign: isCurrentUser ? 'right' : 'left', marginTop: '0.5rem', color: '#888' }}
     >
-      {new Date(timestamp).toLocaleString()}
+      {timestamp.toLocaleString()}
     </Typography>
   </Box>
 );

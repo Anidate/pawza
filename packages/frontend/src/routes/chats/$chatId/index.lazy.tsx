@@ -1,6 +1,7 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import { createLazyFileRoute, useParams } from '@tanstack/react-router';
+
 import AuthenticatedRoute from '../../../features/AuthenticatedRoute';
-import ChatArea from '../../../features/Messages/Chat/Message/ChatArea';
+import ChatArea from '../../../features/Chat/ChatArea';
 
 function Index() {
   const chatId = useParams({
@@ -17,6 +18,6 @@ function Index() {
 
 const AuthenticatedIndex = AuthenticatedRoute(Index);
 
-export const Route = createFileRoute('/chats/$chatId/')({
+export const Route = createLazyFileRoute('/chats/$chatId/')({
   component: AuthenticatedIndex,
 });

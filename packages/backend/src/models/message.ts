@@ -5,22 +5,18 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  author: {
+  sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
   },
   chatId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Chat',
     required: true,
   },
-});
+}, { timestamps: true });
 
 export type MessageDoc = InferSchemaType<typeof messageSchema> & { _id: mongoose.Types.ObjectId };
 
-export const MessageModel = mongoose.model('Message', messageSchema);
+export const MessageModel = mongoose.model<MessageDoc>('Message', messageSchema);
