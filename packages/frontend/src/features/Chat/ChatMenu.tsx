@@ -24,8 +24,30 @@ function ChatMenu() {
   }
 
   return (
-    <Box sx={{ textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <Box sx={{ width: '100%', maxWidth: '600px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '1rem' }}>
+    <Box
+      sx={{
+        textAlign: 'left',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem',
+        height: '100%', // Adjust to fill the parent container
+        boxSizing: 'border-box',
+      }}
+    >
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '600px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          padding: '1rem',
+          height: '100%', // Adjust to fill the parent container
+          overflowY: 'auto', // Allows inner box to scroll
+          boxSizing: 'border-box', // Include padding in height calculation
+        }}
+      >
         <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center', color: '#333' }}>
           Chats
         </Typography>
