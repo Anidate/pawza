@@ -5,63 +5,52 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { createTheme } from '@mui/material/styles';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import * as React from 'react';
+import dayjs from 'dayjs';
+import { type FormEvent, useEffect, useState } from 'react';
 
-import { type PetFields } from '.';
+export interface PetFields {
+  size: string;
+  vac: string;
+  petName: string;
+  breed: string;
+  birthDate: Date;
+}
 
-type SetFillState = (x: boolean) => boolean;
-type SetPetDetState = (x: PetFields) => PetFields;
+type SetFillState = (x: boolean) => void;
+type SetPetDetState = (x: PetFields) => void;
+
 interface PetProps {
   changeState: SetFillState;
   fillState: boolean;
   petDetails: PetFields;
   changePetState: SetPetDetState;
-  /* sizeField: string;
-  vacField: string;
-  petNameField: string;
-  breedField: string; */
 }
 
-export default function PetDetails({ changeState, fillState, petDetails, changePetState }: PetProps) {
-  const [size, setSize] = React.useState('');
-  const [vaccinated, setVac] = React.useState('');
-  const [petName, setPetName] = React.useState('');
-  const [breed, setBreed] = React.useState('');
-  const [dob, setDob] = React.useState<string | null>(null);
-  const pet1: PetFields = petDetails;
+export default function PetDetails({ changeState, changePetState }: PetProps) {
+  const [size, setSize] = useState('');
+  const [vaccinated, setVac] = useState('');
+  const [petName, setPetName] = useState('');
+  const [breed, setBreed] = useState('');
+  const [dob, setDob] = useState<Date | null>(null);
 
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    switch (event.target.id) {
-      case 'petName':
-        setPetName(event.target.value);
-
-        break;
-      case 'Breed':
-        setBreed(event.target.value);
-
-        break;
-      default:
-        break;
-    }
-  };
-
-  React.useEffect(() => {
-    if (size !== '' && vaccinated !== '' && petName !== '' && breed !== '' && dob !== null) {
+  useEffect(() => {
+    if (size && vaccinated && petName && breed && dob) {
       changeState(true);
-      pet1.petNameField = petName;
-      pet1.breedField = breed;
-      pet1.sizeField = size;
-      pet1.vacField = vaccinated;
-      pet1.DOB = new Date(dob);
-      changePetState(pet1);
-    } else changeState(false);
+      changePetState({
+        petName,
+        breed,
+        size,
+        vac: vaccinated,
+        birthDate: new Date(dob),
+      });
+    } else {
+      changeState(false);
+    }
   }, [petName, breed, vaccinated, size, dob]);
 
   function Copyright(props: any) {
@@ -71,26 +60,22 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
       </Typography>
     );
   }
-  const defaultTheme = createTheme();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
   };
-  const handleChange = (event: SelectChangeEvent) => {
-    setSize(event.target.value as string);
-  };
-  const vaccinatedChange = (event: SelectChangeEvent) => {
-    setVac(event.target.value as string);
-  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
+        textAlign="start"
       >
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 4 }}>
           <Grid container spacing={1}>
@@ -100,35 +85,32 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
                 name="Pet Name"
                 required
                 fullWidth
-                id="petName"
                 label="Pet Name"
                 autoFocus
                 value={petName}
-                onChange={handleFormChange}
+                onChange={(e) => setPetName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 required
                 fullWidth
-                id="Breed"
-                value={breed}
                 label="Breed"
                 name="breed"
-                onChange={handleFormChange}
+                value={breed}
+                onChange={(e) => setBreed(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Box sx={{ minWidth: 120 }}>
+              <Box>
                 <FormControl fullWidth>
                   <InputLabel>Vaccinated?</InputLabel>
                   <Select
                     labelId="Vaccinated"
-                    id="demo-simple-select"
                     value={vaccinated}
                     label="Size"
                     required
-                    onChange={vaccinatedChange}
+                    onChange={(e) => setVac(e.target.value)}
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -140,17 +122,10 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Box sx={{ minWidth: 120 }}>
+              <Box>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Size</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="Size"
-                    value={size}
-                    label="Size"
-                    required
-                    onChange={handleChange}
-                  >
+                  <InputLabel>Size</InputLabel>
+                  <Select label="Size" required value={size} onChange={(e) => setSize(e.target.value)}>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -164,16 +139,13 @@ export default function PetDetails({ changeState, fillState, petDetails, changeP
             </Grid>
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    label="Birth Date"
-                    sx={{ width: '100%' }}
-                    onChange={(newValue: string | null) => {
-                      setDob(newValue);
-                    }}
-                    disableFuture
-                  />
-                </DemoContainer>
+                <DatePicker
+                  label="Birth Date"
+                  sx={{ width: '100%' }}
+                  value={dayjs(dob)}
+                  onChange={(newValue) => setDob(newValue?.toDate() || null)}
+                  disableFuture
+                />
               </LocalizationProvider>
             </Grid>
           </Grid>
