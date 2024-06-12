@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 import { useMutation } from '@tanstack/react-query';
 import { Link, Navigate } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
@@ -23,6 +24,30 @@ function Copyright(props: any) {
 }
 
 export default function LoginPage() {
+  const { rive, RiveComponent } = useRive({
+    src: 'login_screen_character.riv',
+    stateMachines: 'StateMachine1',
+    autoplay: true,
+    artboard: 'Artboard',
+  });
+
+  const handsUp = useStateMachineInput(rive, 'StateMachine1', 'hands_up');
+  const check = useStateMachineInput(rive, 'StateMachine1', 'Check');
+  const look = useStateMachineInput(rive, 'StateMachine1', 'Look');
+  const fail = useStateMachineInput(rive, 'StateMachine1', 'fail');
+  const success = useStateMachineInput(rive, 'StateMachine1', 'success');
+
+  const animationHandle = () => {
+    check.value = false;
+  };
+
+  const checkHandle = (e) => {
+    setEmail(e.target.value);
+    handsUp.value = false;
+    check.value = true;
+    look.value = email.length * 3;
+  };
+
   const { setUser, user } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -66,6 +91,9 @@ export default function LoginPage() {
         <FullScreenLoader />
       ) : (
         <Box display="flex" flexDirection="column" alignItems="center">
+          <Box sx={{ width: '100%', height: 200 }}>
+            <RiveComponent />
+          </Box>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -81,7 +109,8 @@ export default function LoginPage() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => checkHandle(e)}
+              onClick={() => (handsUp.value = false)}
             />
             <TextField
               margin="normal"
@@ -93,8 +122,14 @@ export default function LoginPage() {
               sx={{ mt: 0 }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onSelect={() => (handsUp.value = true)}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}>
+            <Button
+              onClick={() => animationHandle()}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}
+            >
               Log in
             </Button>
 
