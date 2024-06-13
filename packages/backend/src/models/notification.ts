@@ -16,7 +16,7 @@ const notificationSchema = new mongoose.Schema(
       enum: Object.values(NotificationType),
       required: true,
     },
-    likedBy: {
+    pawedBy: {
       type: {
         _id: {
           type: mongoose.Schema.Types.ObjectId,

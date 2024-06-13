@@ -5,15 +5,19 @@ export enum NotificationType {
 }
 
 export interface Notification {
-  type: string;
+  id: string;
+  title: string;
+  content: string;
+  read: boolean;
+  image?: string;
   likedBy?: {
     id: string;
     firstName: string;
   };
-  read: boolean;
-  image?: string;
 }
 
 export const getUnreadNotificationsCount = () => apiClient.get<number>('/notifications/unread-count');
+
+export const getNotifications = () => apiClient.get<Notification[]>('/notifications').then((res) => res.data);
 
 export const markNotificationAsRead = (id: string) => apiClient.put(`/notifications/${id}/mark-as-read`);
