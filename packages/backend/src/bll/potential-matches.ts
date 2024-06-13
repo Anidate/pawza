@@ -8,7 +8,7 @@ export interface PotentialMatchPopulated extends Omit<PotentialMatchDoc, 'user'>
   user: UserDoc;
 }
 
-export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | string) => {
+export const getPotentialMatches = async (userId: mongoose.Types.ObjectId) => {
   const user = await UserModel.findById(userId).orFail();
 
   const matchesToIgnore = await PotentialMatchModel.find({
@@ -24,7 +24,7 @@ export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | stri
     genderPreference: user.gender, // checking that my gender is at the users preferences
   };
 
-  // if my purpose and the other user purpose match or atleast one is all
+  // if my purpose and the other user purpose match or at least one is all
   if (user.purpose !== UserPurpose.All) {
     userChoices.purpose = { $in: [user.purpose, UserPurpose.All] };
   }
