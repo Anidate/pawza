@@ -6,6 +6,7 @@ import {
 } from '@mui/icons-material';
 import { AppBar, Badge, IconButton, Toolbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 
 import { getUnreadNotificationsCount } from '../../api/notifications';
 import { useAuth } from '../Auth/useAuth';
@@ -29,29 +30,39 @@ const Footer = () => {
           fontSize: '2rem',
         }}
       >
-        <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-          <HomeIcon fontSize="inherit" />
-        </IconButton>
+        {!!user && (
+          <>
+            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+              <Link to="/home">
+                <HomeIcon fontSize="inherit" sx={{ color: 'white' }} />
+              </Link>
+            </IconButton>
 
-        <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-          {unreadNotificationsCount?.data ? (
-            <Badge badgeContent={unreadNotificationsCount.data} color="error">
-              <NotificationsIcon fontSize="inherit" />
-            </Badge>
-          ) : (
-            <NotificationsIcon fontSize="inherit" />
-          )}
-        </IconButton>
+            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+              {unreadNotificationsCount?.data ? (
+                <Badge badgeContent={unreadNotificationsCount.data} color="error">
+                  <Link to="/notifications">
+                    <NotificationsIcon fontSize="inherit" sx={{ color: 'white' }} />
+                  </Link>
+                </Badge>
+              ) : (
+                <Link to="/notifications">
+                  <NotificationsIcon fontSize="inherit" sx={{ color: 'white' }} />
+                </Link>
+              )}
+            </IconButton>
 
-        <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-          <Badge badgeContent={2} color="error">
-            <MessageIcon fontSize="inherit" />
-          </Badge>
-        </IconButton>
+            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+              <Badge badgeContent={2} color="error">
+                <MessageIcon fontSize="inherit" />
+              </Badge>
+            </IconButton>
 
-        <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-          <PersonIcon fontSize="inherit" />
-        </IconButton>
+            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+              <PersonIcon fontSize="inherit" />
+            </IconButton>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );

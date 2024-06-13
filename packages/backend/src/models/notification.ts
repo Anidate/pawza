@@ -17,15 +17,25 @@ const notificationSchema = new mongoose.Schema(
       required: true,
     },
     likedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type: {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+        firstName: {
+          type: String,
+          required: true,
+        },
+      },
       required: (doc: any) => doc.type === NotificationType.YouWereLiked,
     },
-    seen: {
+    read: {
       type: Boolean,
       required: true,
       default: false,
     },
+    image: String,
   },
   { timestamps: true },
 );
