@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 import { useMutation } from '@tanstack/react-query';
 import { Link, Navigate } from '@tanstack/react-router';
-import { type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 
 import { setApiClientTokens } from '../../api/base';
 import { login as loginApiCall } from '../../api/login';
@@ -34,18 +34,16 @@ export default function LoginPage() {
   const handsUp = useStateMachineInput(rive, 'StateMachine1', 'hands_up');
   const check = useStateMachineInput(rive, 'StateMachine1', 'Check');
   const look = useStateMachineInput(rive, 'StateMachine1', 'Look');
-  const fail = useStateMachineInput(rive, 'StateMachine1', 'fail');
-  const success = useStateMachineInput(rive, 'StateMachine1', 'success');
 
   const animationHandle = () => {
-    check.value = false;
+    check!.value = false;
   };
 
-  const checkHandle = (e) => {
+  const checkHandle = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    handsUp.value = false;
-    check.value = true;
-    look.value = email.length * 3;
+    handsUp!.value = false;
+    check!.value = true;
+    look!.value = email.length * 3;
   };
 
   const { setUser, user } = useAuth();
@@ -57,7 +55,6 @@ export default function LoginPage() {
     mutateAsync: login,
     isPending,
     isSuccess,
-    isError,
   } = useMutation({
     mutationFn: (data: { email: string; password: string }) => loginApiCall(data),
   });
@@ -109,8 +106,8 @@ export default function LoginPage() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => checkHandle(e)}
-              onClick={() => (handsUp.value = false)}
+              onChange={checkHandle}
+              onClick={() => (handsUp!.value = false)}
             />
             <TextField
               margin="normal"
@@ -122,7 +119,7 @@ export default function LoginPage() {
               sx={{ mt: 0 }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onSelect={() => (handsUp.value = true)}
+              onSelect={() => (handsUp!.value = true)}
             />
             <Button
               onClick={() => animationHandle()}

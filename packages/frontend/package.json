@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "check-tsc": "tsc --noEmit",
     "format": "biome format ./src --diagnostic-level=error",
     "format:fix": "biome format ./src --write",
     "lint": "eslint src --ext ts,tsx --max-warnings 0",

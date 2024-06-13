@@ -63,7 +63,8 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    // TODO: Submit data to backend
+    // const data = new FormData(event.currentTarget);
   };
 
   return (
