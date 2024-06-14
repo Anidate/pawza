@@ -4,6 +4,7 @@ import { type FilterQuery } from 'mongoose';
 import { type PotentialMatchDoc, PotentialMatchModel, PotentialMatchStatus } from '../models/potential-match.js';
 import { type UserDoc, UserModel, UserPurpose } from '../models/user.js';
 import { createChat } from './chats.js'; // Import the createChat method
+import { createPawedYouNotification } from './notifications.js';
 
 export interface PotentialMatchPopulated extends Omit<PotentialMatchDoc, 'user'> {
   user: UserDoc;
@@ -45,6 +46,8 @@ export const acceptPotentialMatch = async (user: mongoose.Types.ObjectId, sugges
     { $set: { status: PotentialMatchStatus.Accepted } },
     { upsert: true },
   );
+
+  await createPawedYouNotification(suggestedUser, user);
 
   // Check for mutual match
   const reverseMatch = await PotentialMatchModel.findOne({

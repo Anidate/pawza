@@ -1,7 +1,8 @@
 import type mongoose from 'mongoose';
 import { type FilterQuery } from 'mongoose';
 
-import { type NotificationDoc, NotificationModel } from '../models/notification.js';
+import { type NotificationDoc, NotificationModel, NotificationType } from '../models/notification.js';
+import { UserModel } from '../models/user.js';
 
 export const getUnreadNotificationsCount = async (userId: mongoose.Types.ObjectId): Promise<number> => {
   const res = await NotificationModel.aggregate([
@@ -17,3 +18,19 @@ export const getNotifications = async (userId: mongoose.Types.ObjectId) =>
 
 export const markNotificationAsRead = async (id: mongoose.Types.ObjectId) =>
   await NotificationModel.updateOne({ _id: id }, { $set: { read: true } });
+
+export const createPawedYouNotification = async (userId: mongoose.Types.ObjectId, pawedBy: mongoose.Types.ObjectId) => {
+  const pawedByUser = await UserModel.findById(pawedBy);
+
+  const notification = new NotificationModel({
+    user: userId,
+    type: NotificationType.YouWereLiked,
+    pawedBy: {
+      _id: pawedBy,
+      firstName: pawedByUser!.firstName,
+    },
+    image: pawedByUser!.photos[0],
+  });
+
+  return await notification.save();
+};

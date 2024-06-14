@@ -12,9 +12,11 @@ const notificationSchema = new mongoose.Schema(
       required: true,
     },
     type: {
-      type: String,
-      enum: Object.values(NotificationType),
-      required: true,
+      type: {
+        type: String,
+        enum: Object.values(NotificationType),
+        required: true,
+      },
     },
     pawedBy: {
       type: {
