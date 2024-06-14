@@ -26,6 +26,7 @@ if (IS_DEV) {
 
 app.use('/api', indexRouter);
 
+app.use(express.static(path.resolve(import.meta.dirname, 'public')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(import.meta.dirname, './public', 'index.html'));
 });
