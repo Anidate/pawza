@@ -9,12 +9,11 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <Navbar />
-      <Box component="main" flexGrow={1} width="100vw" maxWidth="400px" alignSelf="center" sx={{ overflowY: 'auto' }}>
+      <Box component="main" flexGrow={1} width="100vw" maxWidth="640px" alignSelf="center" sx={{ overflowY: 'auto' }}>
         <MeFetcher>
           <Outlet />
         </MeFetcher>
       </Box>
-      {/* <TanStackRouterDevtools /> */}
 
       <Footer />
     </>
