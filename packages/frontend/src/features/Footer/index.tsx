@@ -32,34 +32,34 @@ const Footer = () => {
       >
         {!!user && (
           <>
-            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-              <Link to="/home">
-                <HomeIcon fontSize="inherit" sx={{ color: 'white' }} />
-              </Link>
-            </IconButton>
+            <Link to="/home">
+              <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+                <HomeIcon fontSize="inherit" sx={{ color: '#000' }} />
+              </IconButton>
+            </Link>
+
+            <Link to="/notifications">
+              <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+                {unreadNotificationsCount?.data ? (
+                  <Badge badgeContent={unreadNotificationsCount.data} color="error">
+                    <NotificationsIcon fontSize="inherit" sx={{ color: '#000' }} />
+                  </Badge>
+                ) : (
+                  <NotificationsIcon fontSize="inherit" sx={{ color: '#000' }} />
+                )}
+              </IconButton>
+            </Link>
+
+            <Link to="/chats">
+              <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
+                {/* <Badge badgeContent={2} color="error"> */}
+                <MessageIcon fontSize="inherit" sx={{ color: '#000' }} />
+                {/* </Badge> */}
+              </IconButton>
+            </Link>
 
             <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-              {unreadNotificationsCount?.data ? (
-                <Badge badgeContent={unreadNotificationsCount.data} color="error">
-                  <Link to="/notifications">
-                    <NotificationsIcon fontSize="inherit" sx={{ color: 'white' }} />
-                  </Link>
-                </Badge>
-              ) : (
-                <Link to="/notifications">
-                  <NotificationsIcon fontSize="inherit" sx={{ color: 'white' }} />
-                </Link>
-              )}
-            </IconButton>
-
-            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-              <Badge badgeContent={2} color="error">
-                <MessageIcon fontSize="inherit" />
-              </Badge>
-            </IconButton>
-
-            <IconButton color="inherit" sx={{ fontSize: 'inherit' }}>
-              <PersonIcon fontSize="inherit" />
+              <PersonIcon fontSize="inherit" sx={{ color: '#000' }} />
             </IconButton>
           </>
         )}

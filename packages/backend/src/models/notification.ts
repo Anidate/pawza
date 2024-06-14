@@ -12,25 +12,20 @@ const notificationSchema = new mongoose.Schema(
       required: true,
     },
     type: {
-      type: {
-        type: String,
-        enum: Object.values(NotificationType),
-        required: true,
-      },
+      type: String,
+      enum: Object.values(NotificationType),
+      required: true,
     },
     pawedBy: {
-      type: {
-        _id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        firstName: {
-          type: String,
-          required: true,
-        },
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
       },
-      required: (doc: any) => doc.type === NotificationType.YouWereLiked,
+      firstName: {
+        type: String,
+        required: true,
+      },
     },
     read: {
       type: Boolean,

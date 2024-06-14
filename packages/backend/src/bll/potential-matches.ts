@@ -4,7 +4,7 @@ import { type FilterQuery } from 'mongoose';
 import { type PotentialMatchDoc, PotentialMatchModel, PotentialMatchStatus } from '../models/potential-match.js';
 import { type UserDoc, UserModel, UserPurpose } from '../models/user.js';
 import { createChat } from './chats.js'; // Import the createChat method
-import { createPawedYouNotification } from './notifications.js';
+import { createYouWereLikedNotification } from './notifications.js';
 
 export interface PotentialMatchPopulated extends Omit<PotentialMatchDoc, 'user'> {
   user: UserDoc;
@@ -31,11 +31,7 @@ export const getPotentialMatches = async (userId: mongoose.Types.ObjectId | stri
     userChoices.purpose = { $in: [user.purpose, UserPurpose.All] };
   }
 
-  const usersToSuggest = await UserModel.aggregate([
-    { $match: userChoices },
-    { $match: { active: true } },
-    { $sample: { size: 10 } },
-  ]);
+  const usersToSuggest = await UserModel.aggregate([{ $match: userChoices }, { $sample: { size: 10 } }]);
 
   return usersToSuggest;
 };
@@ -47,7 +43,7 @@ export const acceptPotentialMatch = async (user: mongoose.Types.ObjectId, sugges
     { upsert: true },
   );
 
-  await createPawedYouNotification(suggestedUser, user);
+  await createYouWereLikedNotification(suggestedUser, user);
 
   // Check for mutual match
   const reverseMatch = await PotentialMatchModel.findOne({

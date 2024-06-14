@@ -19,7 +19,10 @@ export const getNotifications = async (userId: mongoose.Types.ObjectId) =>
 export const markNotificationAsRead = async (id: mongoose.Types.ObjectId) =>
   await NotificationModel.updateOne({ _id: id }, { $set: { read: true } });
 
-export const createPawedYouNotification = async (userId: mongoose.Types.ObjectId, pawedBy: mongoose.Types.ObjectId) => {
+export const createYouWereLikedNotification = async (
+  userId: mongoose.Types.ObjectId,
+  pawedBy: mongoose.Types.ObjectId,
+) => {
   const pawedByUser = await UserModel.findById(pawedBy);
 
   const notification = new NotificationModel({
