@@ -1,5 +1,5 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Avatar,Box, IconButton, TextField, Typography } from '@mui/material';
+import { Avatar, Box, IconButton, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -43,12 +43,14 @@ function ChatArea({ chatId }: { chatId: string }) {
     }
   };
 
+  const error = chatError || messagesError;
+
   if (isLoadingChat || isLoadingMessages) {
     return <FullScreenLoader />;
   }
 
-  if (chatError || messagesError) {
-    return <div>Error: {(chatError as Error)?.message || (messagesError as Error)?.message}</div>;
+  if (error) {
+    return <div>Error: {(error as Error).message}</div>;
   }
 
   return (
