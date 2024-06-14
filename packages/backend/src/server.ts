@@ -39,6 +39,10 @@ export const startServer = async () =>
 
     const server = IS_PROD ? https.createServer({ key, cert }, app) : http.createServer(app);
 
+    if (IS_PROD) {
+      console.log('I am on prod, creating https server');
+    }
+
     server.on('error', onError);
     server.on('listening', () => {
       logger.info(`Listening on port ${port} 🚀`);
