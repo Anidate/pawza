@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "pnpm --filter=\"@pawza/frontend\" build && copyfiles -u 3 \"packages/frontend/dist/**/*\" packages/backend/src/public"
+    "build": "pnpm --filter=\"@pawza/frontend\" build && pnpm run copy-front",
+    "copy-front": "rimraf packages/backend/src/public && copyfiles -u 3 \"packages/frontend/dist/**/*\" packages/backend/src/public"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
     "@pawza/eslint-config": "workspace:^"
   },
   "dependencies": {
-    "copyfiles": "^2.4.1"
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.7"
   }
 }

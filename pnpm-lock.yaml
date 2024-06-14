@@ -11,6 +11,9 @@ importers:
       copyfiles:
         specifier: ^2.4.1
         version: 2.4.1
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.7
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.5.3
