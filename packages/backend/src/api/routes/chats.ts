@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import mongoose, { isObjectIdOrHexString } from 'mongoose';
 
-import { createMessage, getMatchedChats , getMessagesForChat } from '../../bll/chats.js';
+import { createMessage, getMatchedChats, getMessagesForChat } from '../../bll/chats.js';
 import { AppBadRequestError } from '../../errors/app-bad-request.js';
+import { toChatDto } from '../dtos/chat.js';
+import { toMessageDto } from '../dtos/message.js';
 import { auth } from '../middlewares/auth.js';
 
 const chatsRouter = Router();
@@ -10,7 +12,9 @@ const chatsRouter = Router();
 chatsRouter.get('/', auth(), async (req, res) => {
   const userId = new mongoose.Types.ObjectId(req.user.id);
   const chats = await getMatchedChats(userId);
-  res.json(chats);
+
+  const chatDtos = chats.map(chat => toChatDto(chat, userId));
+  res.json(chatDtos);
 });
 
 chatsRouter.post('/:chatId/messages', auth(), async (req, res) => {
@@ -23,7 +27,8 @@ chatsRouter.post('/:chatId/messages', auth(), async (req, res) => {
   }
 
   const newMessage = await createMessage(content, new mongoose.Types.ObjectId(chatId), new mongoose.Types.ObjectId(senderId));
-  res.status(201).json(newMessage);
+  const messageDto = toMessageDto(newMessage);
+  res.status(201).json(messageDto);
 });
 
 chatsRouter.get('/:chatId/messages', auth(), async (req, res) => {
@@ -32,8 +37,10 @@ chatsRouter.get('/:chatId/messages', auth(), async (req, res) => {
   if (!isObjectIdOrHexString(chatId)) {
     throw new AppBadRequestError();
   }
+
   const messages = await getMessagesForChat(new mongoose.Types.ObjectId(chatId));
-  res.status(200).json(messages);
+  const messageDtos = messages.map(toMessageDto);
+  res.status(200).json(messageDtos);
 });
 
 export { chatsRouter };

@@ -5,7 +5,6 @@ export interface MessageDto {
   content: string;
   timestamp: Date;
   senderId: string;
-  senderName: string;
 }
 
 export const toMessageDto = (message: MessageDoc): MessageDto => ({
@@ -13,5 +12,4 @@ export const toMessageDto = (message: MessageDoc): MessageDto => ({
   content: message.content,
   timestamp: message.createdAt,
   senderId: message.sender._id.toString(),
-  senderName: `${message.sender.firstName} ${message.sender.lastName}`,
 });

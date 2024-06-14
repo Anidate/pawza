@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { fetchMessages, type Message, sendMessage } from '../../api/chats';
 import { useAuth } from '../Auth/useAuth';
+import FullScreenLoader from '../Loader/FullScreenLoader';
 import MessageItem from './Message/MessageItem'; // Import MessageItemProps
 
 function ChatArea({ chatId }: { chatId: string }) {
@@ -35,9 +36,8 @@ function ChatArea({ chatId }: { chatId: string }) {
       setNewMessage('');
     }
   };
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <FullScreenLoader />;
   }
 
   if (error) {

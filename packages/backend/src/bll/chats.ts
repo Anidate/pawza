@@ -1,19 +1,15 @@
 import type mongoose from 'mongoose';
 
-import { type ChatDto, toChatDto } from '../api/dtos/chat.js';
-import { toMessageDto } from '../api/dtos/message.js';
 import { ChatModel } from '../models/chat.js';
 import { MessageModel } from '../models/message.js';
 
 // Function to get all matched chats for a user
-export const getMatchedChats = async (userId: mongoose.Types.ObjectId): Promise<ChatDto[]> => {
+export const getMatchedChats = async (userId: mongoose.Types.ObjectId) => {
   const chats = await ChatModel.find({
     users: userId,
   })
-    .populate('users', 'firstName lastName email');
-
-  // Convert chats to DTOs
-  return chats.map(chat => toChatDto(chat, userId));
+    .populate('users', 'firstName lastName');
+  return chats;
 };
 
 // Function to create a new chat
@@ -45,5 +41,5 @@ export const getMessagesForChat = async (chatId: mongoose.Types.ObjectId) => {
     .sort({ createdAt: 1 })
     .populate('sender', 'firstName lastName');
 
-  return messages.map(toMessageDto);
+  return messages;
 };

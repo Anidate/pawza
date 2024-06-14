@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { type Chat, fetchChats } from '../../api/chats';
+import FullScreenLoader from '../Loader/FullScreenLoader';
 import ChatItem from './ChatItem';
 
 function ChatMenu() {
@@ -14,10 +15,8 @@ function ChatMenu() {
     queryFn: fetchChats,
   });
 
-  console.log(chats);
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <FullScreenLoader />;
   }
   if (error) {
     return <div>Error loading chats</div>;
