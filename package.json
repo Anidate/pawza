@@ -2,7 +2,9 @@
   "name": "pawza",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm --filter=\"@pawza/frontend\" build"
+  },
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",
@@ -10,5 +12,6 @@
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
     "@pawza/eslint-config": "workspace:^"
-  }
+  },
+  "dependencies": {}
 }
