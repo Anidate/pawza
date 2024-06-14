@@ -1,5 +1,5 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Box, IconButton, TextField, Typography } from '@mui/material';
+import { Avatar,Box, IconButton, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -75,16 +75,22 @@ function ChatArea({ chatId }: { chatId: string }) {
         <Box
           sx={{
             padding: '1rem',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#f9f9f9',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             borderBottom: '1px solid #e0e0e0',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
           }}
         >
-          <Typography variant="h6">
-            {chat?.matchedUser.firstName} {chat?.matchedUser.lastName}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
+              {chat?.matchedUser.firstName.charAt(0)}
+            </Avatar>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {chat?.matchedUser.firstName} {chat?.matchedUser.lastName}
+            </Typography>
+          </Box>
         </Box>
         <Box
           sx={{
