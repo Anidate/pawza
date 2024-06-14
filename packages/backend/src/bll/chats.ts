@@ -3,6 +3,11 @@ import type mongoose from 'mongoose';
 import { ChatModel } from '../models/chat.js';
 import { MessageModel } from '../models/message.js';
 
+export const getChatById = async (chatId: mongoose.Types.ObjectId) => {
+  const chat = await ChatModel.findById(chatId).populate('users', 'firstName lastName');
+  return chat;
+};
+
 // Function to get all matched chats for a user
 export const getMatchedChats = async (userId: mongoose.Types.ObjectId) => {
   const chats = await ChatModel.find({

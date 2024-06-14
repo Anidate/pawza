@@ -34,3 +34,7 @@ export const fetchMessages = (chatId: string) =>
 // Send a new message
 export const sendMessage = (chatId: string, content: string) => 
   apiClient.post<Message>(`/chats/${chatId}/messages`, { content }).then(response => response.data);
+
+// Fetch current chat information
+export const fetchChat = (chatId: string) => 
+  apiClient.get<Chat>(`/chats/${chatId}`).then(response => response.data);

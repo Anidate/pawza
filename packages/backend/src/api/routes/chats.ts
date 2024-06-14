@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import mongoose, { isObjectIdOrHexString } from 'mongoose';
 
-import { createMessage, getMatchedChats, getMessagesForChat } from '../../bll/chats.js';
+import { createMessage, getChatById,getMatchedChats, getMessagesForChat } from '../../bll/chats.js';
 import { AppBadRequestError } from '../../errors/app-bad-request.js';
 import { toChatDto } from '../dtos/chat.js';
 import { toMessageDto } from '../dtos/message.js';
@@ -15,6 +15,22 @@ chatsRouter.get('/', auth(), async (req, res) => {
 
   const chatDtos = chats.map(chat => toChatDto(chat, userId));
   res.json(chatDtos);
+});
+
+chatsRouter.get('/:chatId', auth(), async (req, res) => {
+  const { chatId } = req.params;
+
+  if (!isObjectIdOrHexString(chatId)) {
+    throw new AppBadRequestError();
+  }
+
+  const chat = await getChatById(new mongoose.Types.ObjectId(chatId));
+  if (!chat) {
+    return res.status(404).json({ message: 'Chat not found' });
+  }
+
+  const chatDto = toChatDto(chat, new mongoose.Types.ObjectId(req.user.id));
+  res.json(chatDto);
 });
 
 chatsRouter.post('/:chatId/messages', auth(), async (req, res) => {
