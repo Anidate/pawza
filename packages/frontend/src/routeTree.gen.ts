@@ -21,6 +21,8 @@ import { Route as HomeIndexImport } from './routes/home/index'
 const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
+const ChatsIndexLazyImport = createFileRoute('/chats/')()
+const ChatsChatIdIndexLazyImport = createFileRoute('/chats/$chatId/')()
 
 // Create/Update Routes
 
@@ -39,6 +41,11 @@ const LoginIndexLazyRoute = LoginIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
 
+const ChatsIndexLazyRoute = ChatsIndexLazyImport.update({
+  path: '/chats/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/chats/index.lazy').then((d) => d.Route))
+
 const NotificationsIndexRoute = NotificationsIndexImport.update({
   path: '/notifications/',
   getParentRoute: () => rootRoute,
@@ -48,6 +55,13 @@ const HomeIndexRoute = HomeIndexImport.update({
   path: '/home/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ChatsChatIdIndexLazyRoute = ChatsChatIdIndexLazyImport.update({
+  path: '/chats/$chatId/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/chats/$chatId/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -74,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/chats/': {
+      id: '/chats/'
+      path: '/chats'
+      fullPath: '/chats'
+      preLoaderRoute: typeof ChatsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/login/': {
       id: '/login/'
       path: '/login'
@@ -88,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/chats/$chatId/': {
+      id: '/chats/$chatId/'
+      path: '/chats/$chatId'
+      fullPath: '/chats/$chatId'
+      preLoaderRoute: typeof ChatsChatIdIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -97,8 +125,10 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   HomeIndexRoute,
   NotificationsIndexRoute,
+  ChatsIndexLazyRoute,
   LoginIndexLazyRoute,
   SignupIndexLazyRoute,
+  ChatsChatIdIndexLazyRoute,
 })
 
 /* prettier-ignore-end */
