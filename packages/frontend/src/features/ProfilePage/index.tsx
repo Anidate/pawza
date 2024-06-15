@@ -36,43 +36,54 @@ export default function ProfilePage() {
 
   return (
     <Box height="100%">
-      <Button
+      <Box
         sx={{
-          position: 'relative',
-          display: 'inline-block',
           borderRadius: '50%',
-          my: 8,
+          py: 8,
           width: '100%',
           aspectRatio: 1,
+          overflow: 'hidden',
         }}
-        onClick={() => fileInputRef.current?.click()}
-        disabled={isPending}
       >
-        <Avatar
-          src={profilePicSrc}
-          alt="Profile Picture"
-          style={{
+        <Button
+          sx={{
+            borderRadius: '50%',
             width: '100%',
             height: '100%',
-            border: '2px solid #fff',
-            boxShadow: '0px 0px 5px rgba(0,0,0,0.5)',
-            filter: isPending ? 'brightness(50%)' : '',
           }}
-        />
-        {!isPending && (
-          <AddPhotoAlternateIcon
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isPending}
+        >
+          <Avatar
+            src={profilePicSrc}
+            alt="Profile Picture"
             style={{
-              position: 'absolute',
-              top: '98%',
-              left: '50%',
-              transform: 'translate(-50%, -100%)',
-              color: '#fff',
-              fontSize: '3rem',
+              width: '100%',
+              height: '100%',
+              border: '2px solid #fff',
+              boxShadow: '0px 0px 5px rgba(0,0,0,0.5)',
+              filter: isPending ? 'brightness(50%)' : '',
             }}
           />
-        )}
-      </Button>
-
+          {!isPending && (
+            <Box
+              style={{
+                position: 'absolute',
+                top: '98%',
+                left: '50%',
+                transform: 'translate(-50%, -100%)',
+              }}
+            >
+              <AddPhotoAlternateIcon
+                style={{
+                  color: '#fff',
+                  fontSize: '3rem',
+                }}
+              />
+            </Box>
+          )}
+        </Button>
+      </Box>
       <input
         ref={fileInputRef}
         id="fileInput"
