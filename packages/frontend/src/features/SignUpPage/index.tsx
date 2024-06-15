@@ -1,131 +1,114 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 import { useMutation } from '@tanstack/react-query';
-import { Link, useNavigate } from '@tanstack/react-router';
-import { type FormEvent, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 
-import { signUp as signUpApiCall } from '../../api/sign-up';
+import { signUp } from '../../api/sign-up';
 import FullScreenLoader from '../Loader/FullScreenLoader';
+import PetDetails, { type PetFields } from './PetDetails';
+import Terms from './TermsAndConditions';
+import UserInfo, { type UserFields } from './UserInfo';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      Copyright © Pawza {new Date().getFullYear()}.
-    </Typography>
-  );
-}
+const steps = ['User Details', 'Pet Details', 'Terms & Conditions'];
 
 export default function SignUpPage() {
-  const { rive, RiveComponent } = useRive({
-    src: 'login_screen_character.riv',
-    stateMachines: 'StateMachine1',
-    autoplay: true,
-    artboard: 'Artboard',
+  const [activeStep, setActiveStep] = useState(0);
+  const [checked, setChecked] = useState(false);
+  const [petFill, setPetFill] = useState(false);
+  const [userFill, setUserFill] = useState(false);
+
+  const [userInfo, setUserInfo] = useState<UserFields>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    birthDate: null as any, // Itamar approved
   });
-
-  const handsUp = useStateMachineInput(rive, 'StateMachine1', 'hands_up');
-  const check = useStateMachineInput(rive, 'StateMachine1', 'Check');
-  const look = useStateMachineInput(rive, 'StateMachine1', 'Look');
-  const fail = useStateMachineInput(rive, 'StateMachine1', 'fail');
-  const success = useStateMachineInput(rive, 'StateMachine1', 'success');
-
-  const animationHandle = () => {
-    check.value = false;
-  };
-  const [email, setEmail] = useState('');
-
-  const checkHandle = (e) => {
-    setEmail(e.target.value);
-    handsUp.value = false;
-    check.value = true;
-    look.value = email.length * 3;
-  };
-
-  const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
-  const {
-    mutateAsync: signUp,
-    isPending,
-    isSuccess,
-    isError,
-  } = useMutation({
-    mutationFn: (data: { email: string; password: string }) => signUpApiCall(data),
+  const { mutateAsync: signUpMutation, isPending } = useMutation({
+    mutationFn: (data: { email: string; password: string }) => signUp(data),
   });
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [petDet, setPetDet] = useState<PetFields>({
+    size: '',
+    vac: '',
+    petName: '',
+    breed: '',
+    birthDate: null as any, // Itamar approved
+  });
 
-    try {
-      const res = await signUp({ email, password });
-      if (res.status === 201) {
-        navigate({ to: '/login' });
-      }
-    } catch (e) {
-      // Handle the error (show message or something)
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+    if (activeStep === steps.length - 1) {
+      signUp({});
     }
   };
 
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const shouldDisableContinueButton = () => {
+    if (activeStep === 0) {
+      return !userFill;
+    }
+
+    if (activeStep === 1) {
+      return !petFill;
+    }
+
+    return !checked;
+  };
+
   return (
-    <Container maxWidth="xs" sx={{ py: '12lvh' }}>
-      {isPending ? (
+    <Box sx={{ width: '100%', py: '6lvh' }}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      {activeStep === steps.length ? (
         <FullScreenLoader />
       ) : (
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <Box sx={{ width: 500, height: 200 }}>
-            <RiveComponent />
-          </Box>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign Up
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              autoFocus
-              margin="normal"
-              required
-              fullWidth
-              label="Email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => checkHandle(e)}
-              onClick={() => (handsUp.value = false)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              sx={{ mt: 0 }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onSelect={() => (handsUp.value = true)}
-            />
-            <Button
-              onClick={() => animationHandle()}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}
-            >
-              Sign Up
-            </Button>
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>{steps[activeStep]}</Typography>
+          <Box>
+            {activeStep === 0 && (
+              <UserInfo initialState={userInfo} setUserInfo={setUserInfo} changeState={setUserFill} />
+            )}
 
-            <Link to="/login">{'Already have an account? Login'}</Link>
+            {activeStep === 1 && (
+              <PetDetails changeState={setPetFill} fillState={petFill} petDetails={petDet} changePetState={setPetDet} />
+            )}
+
+            {activeStep === 2 && <Terms checkChange={setChecked} checkState={checked} />}
           </Box>
-          <Copyright sx={{ mt: 8, mb: 4 }} />
-        </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            {activeStep !== 0 && (
+              <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                Back
+              </Button>
+            )}
+
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button disabled={shouldDisableContinueButton()} onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Sign Up' : 'Next'}
+            </Button>
+          </Box>
+        </>
       )}
-    </Container>
+    </Box>
   );
 }
