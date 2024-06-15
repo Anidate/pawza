@@ -6,6 +6,7 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
+import FullScreenLoader from '../Loader/FullScreenLoader';
 import PetDetails, { type PetFields } from './PetDetails';
 import Terms from './TermsAndConditions';
 import UserInfo, { type UserFields } from './UserInfo';
@@ -24,6 +25,12 @@ export default function SignUpPage() {
     email: '',
     password: '',
     birthDate: null as any, // Itamar approved
+  });
+
+  const navigate = useNavigate();
+
+  const { mutateAsync: signUp, isPending } = useMutation({
+    mutationFn: (data: { email: string; password: string }) => signUpApiCall(data),
   });
 
   const [petDet, setPetDet] = useState<PetFields>({
@@ -64,9 +71,7 @@ export default function SignUpPage() {
         ))}
       </Stepper>
       {activeStep === steps.length ? (
-        <>
-          <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
-        </>
+        <FullScreenLoader />
       ) : (
         <>
           <Typography sx={{ mt: 2, mb: 1 }}>{steps[activeStep]}</Typography>
@@ -91,7 +96,7 @@ export default function SignUpPage() {
 
             <Box sx={{ flex: '1 1 auto' }} />
             <Button disabled={shouldDisableContinueButton()} onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {activeStep === steps.length - 1 ? 'Sign Up' : 'Next'}
             </Button>
           </Box>
         </>
