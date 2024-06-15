@@ -4,8 +4,11 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { signUp } from '../../api/sign-up';
 import FullScreenLoader from '../Loader/FullScreenLoader';
 import PetDetails, { type PetFields } from './PetDetails';
 import Terms from './TermsAndConditions';
@@ -29,8 +32,8 @@ export default function SignUpPage() {
 
   const navigate = useNavigate();
 
-  const { mutateAsync: signUp, isPending } = useMutation({
-    mutationFn: (data: { email: string; password: string }) => signUpApiCall(data),
+  const { mutateAsync: signUpMutation, isPending } = useMutation({
+    mutationFn: (data: { email: string; password: string }) => signUp(data),
   });
 
   const [petDet, setPetDet] = useState<PetFields>({
@@ -43,6 +46,10 @@ export default function SignUpPage() {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+    if (activeStep === steps.length - 1) {
+      signUp({});
+    }
   };
 
   const handleBack = () => {

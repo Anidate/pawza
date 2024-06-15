@@ -109,8 +109,8 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
         }}
       >
         <Box component="form" noValidate mt={3} textAlign="start">
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+          <Grid container spacing={1}>
+            <Grid item xs={6}>
               <TextField
                 autoComplete="given-name"
                 name="firstName"
@@ -125,11 +125,26 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
                 error={wasFirstNameChanged && firstName === ''}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
               <TextField
                 required
                 fullWidth
                 label="Last Name"
+                name="lastName"
+                autoComplete="family-name"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                  setWasLastNameChanged(true);
+                }}
+                error={wasLastNameChanged && lastName === ''}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                label="Gender"
                 name="lastName"
                 autoComplete="family-name"
                 value={lastName}
@@ -187,7 +202,7 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
                   sx={{ width: '100%' }}
                   value={birthDate && dayjs(birthDate)}
                   onChange={(newValue: Dayjs | null) => setBirthDate(newValue?.toDate() || null)}
-                  disableFuture
+                  maxDate={dayjs().subtract(18, 'years')}
                 />
               </LocalizationProvider>
             </Grid>

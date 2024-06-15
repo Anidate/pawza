@@ -14,7 +14,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.15",
@@ -27,7 +26,6 @@
     "@tanstack/router-devtools": "^1.32.12",
     "axios": "^1.6.8",
     "axios-auth-refresh": "^3.3.6",
-    "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
