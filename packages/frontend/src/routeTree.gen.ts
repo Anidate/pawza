@@ -13,7 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RegisterIndexImport } from './routes/register/index'
 import { Route as ProfileIndexImport } from './routes/profile/index'
 import { Route as NotificationsIndexImport } from './routes/notifications/index'
 import { Route as HomeIndexImport } from './routes/home/index'
@@ -47,11 +46,6 @@ const ChatsIndexLazyRoute = ChatsIndexLazyImport.update({
   path: '/chats/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/chats/index.lazy').then((d) => d.Route))
-
-const RegisterIndexRoute = RegisterIndexImport.update({
-  path: '/register/',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const ProfileIndexRoute = ProfileIndexImport.update({
   path: '/profile/',
@@ -107,13 +101,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexImport
       parentRoute: typeof rootRoute
     }
-    '/register/': {
-      id: '/register/'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/chats/': {
       id: '/chats/'
       path: '/chats'
@@ -152,7 +139,6 @@ export const routeTree = rootRoute.addChildren({
   HomeIndexRoute,
   NotificationsIndexRoute,
   ProfileIndexRoute,
-  RegisterIndexRoute,
   ChatsIndexLazyRoute,
   LoginIndexLazyRoute,
   SignupIndexLazyRoute,

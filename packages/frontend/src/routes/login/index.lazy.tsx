@@ -1,8 +1,8 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { useAuth } from '../../features/Auth/useAuth';
-import HomePage from '../../features/HomePage';
 import FullScreenLoader from '../../features/Loader/FullScreenLoader';
+import LoginPage from '../../features/LoginPage';
 
 function Index() {
   const { user } = useAuth();
@@ -11,7 +11,7 @@ function Index() {
     return <Navigate to="/home" />;
   }
 
-  return <HomePage />;
+  return <LoginPage />;
 }
 
 export const Route = createLazyFileRoute('/login/')({
