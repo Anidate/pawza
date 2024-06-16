@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import { type FormEvent, useEffect, useState } from 'react';
 
 export interface PetFields {
@@ -31,27 +31,32 @@ interface PetProps {
   changePetState: SetPetDetState;
 }
 
-export default function PetDetails({ changeState, changePetState }: PetProps) {
-  const [size, setSize] = useState('');
-  const [vaccinated, setVac] = useState('');
-  const [petName, setPetName] = useState('');
-  const [breed, setBreed] = useState('');
-  const [dob, setDob] = useState<Date | null>(null);
+export default function PetDetails({ changeState, changePetState, petDetails }: PetProps) {
+  const [size, setSize] = useState<string>(petDetails.size);
+  const [vaccinated, setVac] = useState<string>(petDetails.vac);
+  const [petName, setPetName] = useState<string>(petDetails.petName);
+  const [breed, setBreed] = useState<string>(petDetails.breed);
+  const [petDob, setPetDob] = useState<Date | null>(petDetails.birthDate);
+
+  const [wasPetNameChanged, setWasPetNameChanged] = useState(false);
+  const [wasBreedChanged, setWasBreedChanged] = useState(false);
+  const [wasVaccinatedChanged, setWasVaccinatedChanged] = useState(false);
+  const [wasSizeChanged, setWasSizeChanged] = useState(false);
 
   useEffect(() => {
-    if (size && vaccinated && petName && breed && dob) {
+    if (size && vaccinated && petName && breed && petDob) {
       changeState(true);
       changePetState({
         petName,
         breed,
         size,
         vac: vaccinated,
-        birthDate: new Date(dob),
+        birthDate: new Date(petDob),
       });
     } else {
       changeState(false);
     }
-  }, [petName, breed, vaccinated, size, dob]);
+  }, [petName, breed, vaccinated, size, petDob]);
 
   function Copyright(props: any) {
     return (
@@ -89,7 +94,11 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
                 label="Pet Name"
                 autoFocus
                 value={petName}
-                onChange={(e) => setPetName(e.target.value)}
+                onChange={(e) => {
+                  setPetName(e.target.value);
+                  setWasPetNameChanged(true);
+                }}
+                error={wasPetNameChanged && petName === ''}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -99,7 +108,11 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
                 label="Breed"
                 name="breed"
                 value={breed}
-                onChange={(e) => setBreed(e.target.value)}
+                onChange={(e) => {
+                  setBreed(e.target.value);
+                  setWasBreedChanged(true);
+                }}
+                error={wasBreedChanged && breed === ''}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -111,7 +124,11 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
                     value={vaccinated}
                     label="Size"
                     required
-                    onChange={(e) => setVac(e.target.value)}
+                    onChange={(e) => {
+                      setVac(e.target.value);
+                      setWasVaccinatedChanged(true);
+                    }}
+                    error={wasVaccinatedChanged && vaccinated === ''}
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -126,7 +143,16 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
               <Box>
                 <FormControl fullWidth>
                   <InputLabel>Size</InputLabel>
-                  <Select label="Size" required value={size} onChange={(e) => setSize(e.target.value)}>
+                  <Select
+                    label="Size"
+                    required
+                    value={size}
+                    onChange={(e) => {
+                      setSize(e.target.value);
+                      setWasSizeChanged(true);
+                    }}
+                    error={wasSizeChanged && size === ''}
+                  >
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -141,10 +167,10 @@ export default function PetDetails({ changeState, changePetState }: PetProps) {
             <Grid item xs={12} sm={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Birth Date"
+                  label="Pet Birthday"
                   sx={{ width: '100%' }}
-                  value={dayjs(dob)}
-                  onChange={(newValue) => setDob(newValue?.toDate() || null)}
+                  value={petDob && dayjs(petDob)}
+                  onChange={(newValue: Dayjs | null) => setPetDob(newValue?.toDate() || null)}
                   disableFuture
                 />
               </LocalizationProvider>

@@ -1,3 +1,4 @@
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -12,6 +13,9 @@ import { useEffect, useState } from 'react';
 export interface UserFields {
   firstName: string;
   lastName: string;
+  gender: string;
+  genderPreference: string;
+  purpose: string;
   email: string;
   password: string;
   birthDate: Date;
@@ -29,15 +33,21 @@ interface UserProps {
 export default function UserInfo({ setUserInfo, changeState, initialState }: UserProps) {
   const [firstName, setFirstName] = useState<string>(initialState.firstName);
   const [lastName, setLastName] = useState<string>(initialState.lastName);
+  const [gender, setGender] = useState<string>(initialState.gender);
+  const [genderPreference, setGenderPreference] = useState<string>(initialState.genderPreference);
+  const [purpose, setPurpose] = useState<string>(initialState.purpose);
   const [email, setEmail] = useState<string>(initialState.email);
   const [password, setPassword] = useState<string>(initialState.password);
+  const [birthDate, setBirthDate] = useState<Date | null>(initialState.birthDate);
 
   const [wasFirstNameChanged, setWasFirstNameChanged] = useState(false);
   const [wasLastNameChanged, setWasLastNameChanged] = useState(false);
+  const [wasGenderChanged, setWasGenderChanged] = useState(false);
+  const [wasGenderPreferenceChanged, setWasGenderPreferenceChanged] = useState(false);
+  const [wasPurposeChanged, setWasPurposeChanged] = useState(false);
   const [wasEmailChanged, setWasEmailChanged] = useState(false);
   const [wasPasswordChanged, setWasPasswordChanged] = useState(false);
 
-  const [birthDate, setBirthDate] = useState<Date | null>(initialState.birthDate);
   const [emailHasError, setEmailHasError] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
@@ -76,11 +86,14 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
   };
 
   useEffect(() => {
-    if (firstName && lastName && email && password && birthDate) {
+    if (firstName && lastName && gender && genderPreference && purpose && email && password && birthDate) {
       changeState(true);
       setUserInfo({
         firstName,
         lastName,
+        gender,
+        genderPreference,
+        purpose,
         email,
         password,
         birthDate: new Date(birthDate),
@@ -88,7 +101,7 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
     } else {
       changeState(false);
     }
-  }, [firstName, lastName, email, password, birthDate]);
+  }, [firstName, lastName, gender, genderPreference, purpose, email, password, birthDate]);
 
   function Copyright(props: any) {
     return (
@@ -116,7 +129,7 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
                 name="firstName"
                 required
                 fullWidth
-                label="First Name"
+                label="First Named"
                 value={firstName}
                 onChange={(e) => {
                   setFirstName(e.target.value);
@@ -140,6 +153,82 @@ export default function UserInfo({ setUserInfo, changeState, initialState }: Use
                 error={wasLastNameChanged && lastName === ''}
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel>Gender</InputLabel>
+                  <Select
+                    labelId="Gender"
+                    value={gender}
+                    label="Size"
+                    required
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                      setWasGenderChanged(true);
+                    }}
+                    error={wasGenderChanged && gender === ''}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Male</MenuItem>
+                    <MenuItem value={20}>Female</MenuItem>
+                    <MenuItem value={30}>Don't Care</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel>Interested in?</InputLabel>
+                  <Select
+                    labelId="GenderPreference"
+                    value={genderPreference}
+                    label="Size"
+                    required
+                    onChange={(e) => {
+                      setGenderPreference(e.target.value);
+                      setWasGenderPreferenceChanged(true);
+                    }}
+                    error={wasGenderPreferenceChanged && genderPreference === ''}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Male</MenuItem>
+                    <MenuItem value={20}>Female</MenuItem>
+                    <MenuItem value={30}>Don't Care</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel>What is your purpose?</InputLabel>
+                  <Select
+                    labelId="Purpose"
+                    value={purpose}
+                    label="Size"
+                    required
+                    onChange={(e) => {
+                      setPurpose(e.target.value);
+                      setWasPurposeChanged(true);
+                    }}
+                    error={wasPurposeChanged && purpose === ''}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Romantic</MenuItem>
+                    <MenuItem value={20}>Platonic</MenuItem>
+                    <MenuItem value={30}>Don't Care</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 required

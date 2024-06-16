@@ -22,6 +22,9 @@ export default function SignUpPage() {
   const [userInfo, setUserInfo] = useState<UserFields>({
     firstName: '',
     lastName: '',
+    gender: '',
+    genderPreference: '',
+    purpose: '',
     email: '',
     password: '',
     birthDate: null as any, // Itamar approved
